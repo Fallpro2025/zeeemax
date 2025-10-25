@@ -1,0 +1,308 @@
+@extends('layouts.app')
+
+@section('title', 'ZEEEMAX - Révélez votre identité de marque')
+@section('description', 'ZEEEMAX accompagne les entrepreneurs à construire une image forte et impactante grâce à un branding sur-mesure et une stratégie digitale alignée.')
+
+@section('content')
+<!-- Hero Section - Style Dream Biz avec image de fond et textes courts -->
+<section id="accueil" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Image de fond avec overlay -->
+    <div class="absolute inset-0">
+        <img src="{{ asset('images/hero-bg.jpg') }}" 
+             alt="Femme entrepreneure travaillant" 
+             class="w-full h-full object-cover object-center"/>
+        <div class="absolute inset-0 bg-black opacity-60"></div> <!-- Overlay sombre légèrement plus opaque -->
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-white text-center py-20">
+        <!-- Titre principal ZEEEMAX: court et impactant -->
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight opacity-0 animate-fade-in-up">
+            Révélez votre <br class="hidden sm:block">identité de marque
+        </h1>
+        
+        <!-- Sous-titre ZEEEMAX: concis -->
+        <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed opacity-0 animate-fade-in-up animation-delay-200 font-light">
+            Accompagner les entrepreneurs à construire une image forte et impactante.
+        </p>
+        
+        <!-- CTA unique -->
+        <div class="opacity-0 animate-fade-in-up animation-delay-400">
+            <a href="#services" class="inline-block bg-purple-600 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-purple-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 uppercase tracking-wide">
+                Découvrir mes services
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- À propos Section -->
+<section id="apropos" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center lg:py-20">
+            <!-- Content -->
+            <div class="lg:pr-12">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                    <span class="text-purple-600">ZEEEMAX</span>: Révélez votre identité,<br class="hidden sm:block">faîtes rayonner votre projet.
+                </h2>
+                <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                    <p class="font-light">
+                        <strong class="font-semibold text-gray-900">ZEEEMAX est né d’une envie profonde :</strong> aider les entrepreneur(e)s à révéler leur identité, construire une image de marque forte et faire rayonner leur projet avec impact.
+                    </p>
+                    <p class="font-light">
+                        Forte d'une expérience de terrain et diplômée en <strong class="font-semibold text-gray-900">stratégie marketing & communication</strong>, j'accompagne les marques à clarifier leur positionnement et gagner en visibilité.
+                    </p>
+                    <div class="pt-4">
+                        <a href="#contact" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-full text-base font-bold hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 uppercase tracking-wide">
+                            Prendre RDV
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Visual de la section (image de femme) -->
+            <div class="relative flex justify-center items-center h-full min-h-[300px] lg:min-h-[500px]">
+                <div class="w-full h-full rounded-3xl overflow-hidden shadow-2xl transition-shadow duration-300">
+                    <img src="{{ asset('images/md.jpg') }}" 
+                         alt="Femme inspirante ZEEEMAX" 
+                         class="w-full h-full object-cover object-center"
+                         loading="eager"
+                         fetchpriority="high"
+                         decoding="async"
+                         width="600" 
+                         height="500"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section - Style Dream Biz épuré -->
+<section id="services" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+            <p class="text-purple-600 font-bold uppercase tracking-widest text-sm mb-4">Découvrez nos services</p>
+            <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                Choisissez votre point de départ
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto font-light">
+                Des solutions sur-mesure pour révéler votre identité et faire rayonner votre marque
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @foreach($services as $service)
+            <div class="group bg-white p-10 rounded-2xl border border-gray-200 hover:border-purple-200 hover:shadow-2xl transition-all duration-300">
+                <div class="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    {!! $service->icon !!}
+                </div>
+                <h3 class="text-2xl font-black text-gray-900 mb-4 tracking-tight">{{ $service->title }}</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed font-light">
+                    {{ $service->description }}
+                </p>
+                <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-700 transition-colors group">
+                    Commencer
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Section -->
+<section id="portfolio" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+            <p class="text-purple-600 font-bold uppercase tracking-widest text-sm mb-4">Mes réalisations</p>
+            <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                Découvrez nos projets à succès
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto font-light">
+                Un aperçu de mon travail avec des entrepreneurs passionnés.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            @foreach($portfolioItems as $item)
+            <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <img src="{{ $item->image }}" alt="{{ $item->title }}" class="w-full h-64 object-cover object-center transition-transform duration-300 group-hover:scale-105">
+                <div class="p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $item->title }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ $item->category }}</p>
+                    <p class="text-gray-700 leading-relaxed font-light mb-6">{{ $item->description }}</p>
+                    <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-700 transition-colors group">
+                        Voir le projet
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Témoignages Section - Style Dream Biz -->
+<section id="temoignages" class="relative py-24 text-white overflow-hidden">
+    <!-- Image de fond avec effet parallaxe et overlay sombre -->
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: url('{{ asset('images/testimonials-bg.jpg') }}');">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl md:text-5xl font-black mb-6 tracking-tight">
+                Ils sont satisfaits de nos services !
+            </h2>
+            <p class="text-xl font-light">
+                Découvrez ce que nos clients disent de notre expertise
+            </p>
+        </div>
+        
+        <div x-data="testimonialSlider()" 
+             x-init="init()" 
+             @mouseover="pause()" 
+             @mouseout="start()"
+             data-testimonials="{{ $testimonials->toJson() }}" 
+             class="relative mx-auto max-w-4xl">
+            <!-- Testimonial cards -->
+            <div class="relative h-64 overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg">
+                <template x-for="(testimonial, index) in testimonials" :key="index">
+                    <div x-show="currentIndex === index" 
+                         x-transition:enter="transition ease-out duration-1000" 
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-500" 
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="absolute inset-0 p-8 flex items-center justify-center text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold text-3xl mb-4"
+                                 x-text="testimonial.name.substring(0, 1)">
+                            </div>
+                            <h4 class="font-semibold text-xl" x-text="testimonial.name"></h4>
+                            <p class="text-gray-200 text-sm mb-6" x-text="testimonial.profession"></p>
+                            <p class="mb-4 italic leading-relaxed text-gray-100 text-lg" x-text="testimonial.content"></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Navigation dots -->
+            <div class="flex justify-center space-x-2 mt-8">
+                <template x-for="(testimonial, index) in testimonials" :key="index">
+                    <button @click="goTo(index)" 
+                            :class="{'bg-purple-600': currentIndex === index, 'bg-gray-400': currentIndex !== index}"
+                            class="w-3 h-3 rounded-full transition-colors duration-300"></button>
+                </template>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                Lançons ensemble votre activité
+            </h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                Nous serons à vos côtés à chaque étape pour révéler votre identité de marque
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Formulaire de contact -->
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20">
+                <h3 class="text-2xl font-bold mb-6">Prendre contact</h3>
+                <form action="{{ route('home') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="text" name="first_name" placeholder="Prénom" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 transition-colors">
+                        <input type="text" name="last_name" placeholder="Nom" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 transition-colors">
+                    </div>
+                    <input type="email" name="email" placeholder="Email" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 transition-colors">
+                    <input type="text" name="subject" placeholder="Objet" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 transition-colors">
+                    <textarea name="message" placeholder="Message" rows="4" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 transition-colors resize-none"></textarea>
+                    <button type="submit" class="w-full bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors transform hover:scale-105 duration-300 shadow-lg">
+                        Envoyer le message
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Informations de contact -->
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">Contactez-nous</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4 group">
+                            <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Email</p>
+                                <p class="text-gray-300">contact@zeeemax.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 group">
+                            <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                    </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Téléphone</p>
+                                <p class="text-gray-300">+33 1 23 45 67 89</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 group">
+                            <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Localisation</p>
+                                <p class="text-gray-300">Paris, France</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                    <h4 class="font-bold text-xl mb-4">Prendre RDV gratuit</h4>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        Réservez un appel découverte de 30 minutes pour échanger sur votre projet et découvrir comment ZEEEMAX peut vous aider.
+                    </p>
+                    <a href="#contact" class="inline-block bg-white text-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        Réserver maintenant
+                    </a>
+                </div>
+                
+                <!-- Réseaux sociaux -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                    <h4 class="font-bold text-xl mb-4">Suivez-nous</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center hover:bg-purple-700 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center hover:bg-purple-700 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center hover:bg-purple-700 transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endsection
