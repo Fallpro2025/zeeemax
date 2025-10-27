@@ -40,7 +40,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center lg:py-20">
             <!-- Content -->
             <div class="lg:pr-12">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">
                     <span class="text-purple-600">ZEEEMAX</span>: Révélez votre identité,<br class="hidden sm:block">faîtes rayonner votre projet.
                 </h2>
                 <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
@@ -59,7 +59,7 @@
             </div>
             <!-- Visual de la section (image de femme) -->
             <div class="relative flex justify-center items-center h-full min-h-[300px] lg:min-h-[500px]">
-                <div class="w-full h-full rounded-3xl overflow-hidden shadow-2xl transition-shadow duration-300">
+                <div class="w-full h-full rounded-3xl overflow-hidden image-about-shadow">
                     <img src="{{ asset('images/md.jpg') }}" 
                          alt="Femme inspirante ZEEEMAX" 
                          class="w-full h-full object-cover object-center"
@@ -160,11 +160,27 @@
             </p>
         </div>
         
-        <div x-data="testimonialSlider()" 
-             x-init="init()" 
+        <div x-data="{
+             currentIndex: 0,
+             testimonials: {{ $testimonials->toJson() }},
+             interval: null,
+             init() {
+                 this.start();
+             },
+             start() {
+                 this.interval = setInterval(() => {
+                     this.currentIndex = (this.currentIndex + 1) % this.testimonials.length;
+                 }, 5000);
+             },
+             pause() {
+                 if (this.interval) clearInterval(this.interval);
+             },
+             goTo(index) {
+                 this.currentIndex = index;
+             }
+         }" 
              @mouseover="pause()" 
              @mouseout="start()"
-             data-testimonials="{{ $testimonials->toJson() }}" 
              class="relative mx-auto max-w-4xl">
             <!-- Testimonial cards -->
             <div class="relative h-64 overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg">

@@ -5,7 +5,7 @@
 @section('page-description', 'Showcase de vos projets et réalisations')
 
 @section('content')
-<div x-data="{ selectedItems: [] }" class="p-6">
+<div x-data="{ selectedItems: [] }" >
     
     <!-- Header Section avec bouton d'action -->
     <div class="flex items-center justify-between mb-8 animate-fade-in">
@@ -251,4 +251,5 @@
     }
 </script>
 @endpush
+
 

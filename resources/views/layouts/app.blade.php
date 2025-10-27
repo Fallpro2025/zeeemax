@@ -81,7 +81,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     
     <!-- Alpine.js pour interactivité fluide -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -97,6 +98,11 @@
         /* Navigation fluide */
         .nav-transition {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Box shadow par défaut pour image à propos */
+        .image-about-shadow {
+            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4);
         }
         
         /* Réduction animations pour performances */

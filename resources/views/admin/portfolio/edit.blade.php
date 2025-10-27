@@ -5,7 +5,7 @@
 @section('page-description', 'Éditez les détails de votre projet')
 
 @section('content')
-<div class="p-6">
+<div >
     
     <!-- Header Section avec navigation -->
     <div class="flex items-center justify-between mb-8 animate-fade-in">
@@ -266,3 +266,4 @@
     </div>
 </div>
 @endsection
+

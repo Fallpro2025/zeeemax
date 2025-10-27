@@ -12,7 +12,7 @@
 @section('page-description', 'Gérez les demandes et messages de contact')
 
 @section('content')
-<div x-data="{ selectedItems: [] }" class="p-6">
+<div x-data="{ selectedItems: [] }">
     
     <!-- Header Section avec actions -->
     <div class="flex items-center justify-between mb-8 animate-fade-in">
@@ -282,4 +282,5 @@
     }
 </script>
 @endpush
+
 

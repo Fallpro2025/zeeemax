@@ -5,7 +5,7 @@
 @section('page-description', 'Ajoutez un nouveau projet à votre portfolio')
 
 @section('content')
-<div class="p-6">
+<div >
     
     <!-- Header Section avec navigation -->
     <div class="flex items-center justify-between mb-8">
@@ -262,3 +262,4 @@
     });
 </script>
 @endpush
+

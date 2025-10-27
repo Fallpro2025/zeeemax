@@ -4,58 +4,59 @@
 @section('page-title', 'Détails du Service')
 @section('page-description', 'Consultez les informations complètes du service')
 
-@section('content')
-<div class="p-6">
-    
-    <!-- Header Section avec navigation -->
-    <div class="flex items-center justify-between mb-8 animate-fade-in">
-        <div>
-            <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition-colors">Dashboard</a>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <a href="{{ route('admin.services.index') }}" class="hover:text-blue-600 transition-colors">Services</a>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <span class="text-blue-600">{{ $service->titre }}</span>
-            </div>
-            <div class="flex items-center space-x-3">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $service->titre }}</h1>
-                @if($service->actif)
-                    <span class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-medium rounded-full">
-                        Actif
-                    </span>
-                @else
-                    <span class="px-3 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 text-sm font-medium rounded-full">
-                        Inactif
-                    </span>
-                @endif
-            </div>
-        </div>
-        
-        <!-- Actions rapides -->
-        <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.services.edit', $service) }}" class="flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                Modifier
-            </a>
-            <a href="{{ route('admin.services.index') }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Retour à la liste
-            </a>
-        </div>
-    </div>
+@push('breadcrumb')
+<div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+    <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition-colors">Dashboard</a>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <a href="{{ route('admin.services.index') }}" class="hover:text-blue-600 transition-colors">Services</a>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <span class="text-blue-600">{{ $service->titre }}</span>
+</div>
+@endpush
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <!-- Contenu principal -->
-        <div class="lg:col-span-2 space-y-6">
+@push('page-actions')
+<div class="flex items-center space-x-3">
+    <a href="{{ route('admin.services.edit', $service) }}" class="flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Modifier
+    </a>
+    <a href="{{ route('admin.services.index') }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Retour
+    </a>
+</div>
+@endpush
+
+@section('content')
+<div>
+    <!-- Titre et Statut -->
+    <div class="mb-6">
+    <div class="flex items-center space-x-3">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $service->titre }}</h1>
+        @if($service->actif)
+            <span class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-medium rounded-full">
+                Actif
+            </span>
+        @else
+            <span class="px-3 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 text-sm font-medium rounded-full">
+                Inactif
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Contenu principal -->
+    <div class="lg:col-span-2 space-y-6">
             
             <!-- Informations générales -->
             <div class="glass dark:glass-dark rounded-2xl p-8 animate-slide-up">
@@ -226,6 +227,7 @@
         </div>
     </div>
 </div>
+</div>
 
 @push('scripts')
 <script>
@@ -248,3 +250,4 @@
     }
 </script>
 @endpush
+
