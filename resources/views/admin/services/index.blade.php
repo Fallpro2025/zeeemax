@@ -4,29 +4,33 @@
 @section('page-title', 'Gestion des Services')  
 @section('page-description', 'Gérez et organisez vos services')
 
-@push('breadcrumb')
-<div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-    <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition-colors">Dashboard</a>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-    </svg>
-    <span class="text-blue-600">Services</span>
-</div>
-@endpush
-
-@push('page-actions')
-<a href="{{ route('admin.services.create') }}" class="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-    </svg>
-    Nouveau Service
-</a>
-@endpush
-
 @section('content')
 <div x-data="{ selectedServices: [] }">
-<!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 animate-slide-up">
+    
+    <!-- Header Section avec bouton d'action -->
+    <div class="flex items-center justify-between mb-8 animate-fade-in">
+        <div>
+            <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition-colors">Dashboard</a>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <span class="text-blue-600">Services</span>
+            </div>
+            <p class="text-gray-600 dark:text-gray-300">Gérez et organisez vos services</p>
+        </div>
+        
+        <!-- Nouveau Service Button -->
+        <a href="{{ route('admin.services.create') }}" class="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Nouveau Service
+        </a>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 animate-slide-up">
             <div class="glass dark:glass-dark rounded-2xl p-6">
                 <div class="flex items-center">
                     <div class="p-3 bg-blue-500 bg-opacity-20 rounded-xl mr-4">

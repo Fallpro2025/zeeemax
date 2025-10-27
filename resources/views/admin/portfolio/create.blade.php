@@ -33,9 +33,9 @@
         </a>
     </div>
 
-    <!-- Formulaire de création -->
+    <!-- Formulaire -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form action="{{ route('admin.portfolio.store') }}" method="POST" class="space-y-8 p-8">
+        <form action="{{ route('admin.portfolio.store') }}" method="POST" class="space-y-6 p-8">
             @csrf
             
             <!-- Titre et Slug -->

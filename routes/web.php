@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\PartnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +52,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
     Route::post('contacts/{contact}/archive', [ContactController::class, 'archive'])->name('contacts.archive');
     Route::post('contacts/{contact}/notes', [ContactController::class, 'updateNotes'])->name('contacts.notes');
+    
+    // Gestion de l'Équipe
+    Route::resource('team', TeamController::class);
+    Route::post('team/{team}/toggle', [TeamController::class, 'toggle'])->name('team.toggle');
+    
+    // Gestion des Partenaires
+    Route::resource('partners', PartnerController::class);
+    Route::post('partners/{partner}/toggle', [PartnerController::class, 'toggle'])->name('partners.toggle');
 });
 
 // Routes futures (à décommenter quand les contrôleurs seront créés)

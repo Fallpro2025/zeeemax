@@ -41,9 +41,9 @@
         </div>
     </div>
 
-    <!-- Formulaire de modification -->
-    <div class="glass dark:glass-dark rounded-2xl overflow-hidden animate-slide-up">
-        <form action="{{ route('admin.portfolio.update', $portfolioItem) }}" method="POST" class="space-y-8 p-8">
+    <!-- Formulaire -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <form action="{{ route('admin.portfolio.update', $portfolioItem) }}" method="POST" class="space-y-6 p-8">
             @csrf
             @method('PUT')
             
