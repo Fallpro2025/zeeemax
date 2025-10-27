@@ -135,14 +135,14 @@
              style="display: none;"></div>
         
         <!-- Sidebar Ultra Moderne -->
-        <div x-show="sidebarOpen" 
+        <aside x-show="sidebarOpen" 
              x-transition:enter="transform transition ease-in-out duration-300"
              x-transition:enter-start="-translate-x-full"
              x-transition:enter-end="translate-x-0"
              x-transition:leave="transform transition ease-in-out duration-300"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="-translate-x-full"
-             class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col lg:static lg:z-0">
+             class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col lg:relative lg:z-0">
             
             <div class="flex flex-col h-screen glass dark:glass-dark sidebar-content">
                 <!-- Logo Section -->
@@ -208,10 +208,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
         
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
             
             <!-- Header Ultra Moderne -->
             <header class="glass dark:glass-dark border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30">
@@ -279,8 +279,10 @@
             </header>
             
             <!-- Main Dashboard Content -->
-            <main class="flex-1 overflow-y-auto p-6">
-                @yield('content')
+            <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
+                <div class="max-w-7xl mx-auto">
+                    @yield('content')
+                </div>
             </main>
         </div>
     </div>
