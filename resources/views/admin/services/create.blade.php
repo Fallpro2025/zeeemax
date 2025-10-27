@@ -28,9 +28,8 @@
 @endpush
 
 @section('content')
-<div>
-    <!-- Formulaire de création -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+<!-- Formulaire de création -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
     <form action="{{ route('admin.services.store') }}" method="POST" class="space-y-6 p-8">
             @csrf
             
@@ -151,7 +150,6 @@
                 </div>
             </div>
     </form>
-    </div>
 </div>
 
 @push('scripts')

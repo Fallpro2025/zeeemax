@@ -37,9 +37,8 @@
 @endpush
 
 @section('content')
-<div>
-    <!-- Formulaire de modification -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+<!-- Formulaire de modification -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         <form action="{{ route('admin.services.update', $service) }}" method="POST" class="space-y-6 p-8">
             @csrf
             @method('PUT')
@@ -201,7 +200,6 @@
                 </div>
             </div>
         </form>
-    </div>
 </div>
 
 @push('scripts')

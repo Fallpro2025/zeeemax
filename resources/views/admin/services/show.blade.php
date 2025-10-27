@@ -36,9 +36,8 @@
 @endpush
 
 @section('content')
-<div>
-    <!-- Titre et Statut -->
-    <div class="mb-6">
+<!-- Titre et Statut -->
+<div class="mb-6">
     <div class="flex items-center space-x-3">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $service->titre }}</h1>
         @if($service->actif)
@@ -226,7 +225,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 
 @push('scripts')
