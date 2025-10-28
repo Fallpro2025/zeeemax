@@ -1,6 +1,6 @@
 @extends('layouts.admin-sidebar')
 
-@section('title', 'Projet: ' . $portfolioItem->titre . ' - ZEEEMAX Admin')
+@section('title', 'Projet: ' . $portfolio->titre . ' - ZEEEMAX Admin')
 @section('page-title', 'Détails du Projet')
 @section('page-description', 'Consultez les informations complètes du projet')
 
@@ -19,16 +19,16 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
-                <span class="text-blue-600">{{ $portfolioItem->titre }}</span>
+                <span class="text-blue-600">{{ $portfolio->titre }}</span>
             </div>
             <div class="flex items-center space-x-3">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $portfolioItem->titre }}</h1>
-                @if($portfolioItem->featured)
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $portfolio->titre }}</h1>
+                @if($portfolio->featured)
                     <span class="px-3 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 text-sm font-medium rounded-full">
                         ⭐ Featured
                     </span>
                 @endif
-                @if($portfolioItem->actif)
+                @if($portfolio->actif)
                     <span class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-medium rounded-full">
                         Actif
                     </span>
@@ -42,7 +42,7 @@
         
         <!-- Actions -->
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.portfolio.edit', $portfolioItem) }}" class="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <a href="{{ route('admin.portfolio.edit', ['portfolio' => $portfolio->id]) }}" class="flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                 </svg>
@@ -64,10 +64,10 @@
             
             <!-- Image et infos principales -->
             <div class="glass dark:glass-dark rounded-2xl overflow-hidden animate-slide-up">
-                @if($portfolioItem->image_url)
+                @if($portfolio->image_url && !str_contains($portfolio->image_url, 'via.placeholder'))
                     <div class="aspect-video bg-gray-100 dark:bg-gray-800">
-                        <img src="{{ $portfolioItem->image_url }}" 
-                             alt="{{ $portfolioItem->titre }}"
+                        <img src="{{ str_starts_with($portfolio->image_url, 'http') ? $portfolio->image_url : asset($portfolio->image_url) }}" 
+                             alt="{{ $portfolio->titre }}"
                              class="w-full h-full object-cover">
                     </div>
                 @endif
@@ -75,11 +75,11 @@
                 <div class="p-8">
                     <div class="flex items-center justify-between mb-4">
                         <span class="px-3 py-1 bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 text-sm font-medium rounded-full">
-                            {{ ucfirst($portfolioItem->categorie) }}
+                            {{ ucfirst($portfolio->categorie) }}
                         </span>
                         <div class="flex items-center space-x-3">
-                            @if($portfolioItem->lien_demo)
-                                <a href="{{ $portfolioItem->lien_demo }}" 
+                            @if($portfolio->lien_demo)
+                                <a href="{{ $portfolio->lien_demo }}" 
                                    target="_blank"
                                    class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,8 +88,8 @@
                                     Voir la démo
                                 </a>
                             @endif
-                            @if($portfolioItem->lien_github)
-                                <a href="{{ $portfolioItem->lien_github }}" 
+                            @if($portfolio->lien_github)
+                                <a href="{{ $portfolio->lien_github }}" 
                                    target="_blank"
                                    class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors">
                                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -101,17 +101,17 @@
                         </div>
                     </div>
                     
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ $portfolioItem->titre }}</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ $portfolio->titre }}</h2>
                     
                     <div class="prose dark:prose-invert max-w-none">
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $portfolioItem->description }}</p>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $portfolio->description }}</p>
                     </div>
                     
-                    @if($portfolioItem->technologies)
+                    @if($portfolio->technologies)
                         <div class="mt-6">
                             <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Technologies utilisées</h4>
                             <div class="flex flex-wrap gap-2">
-                                @foreach((is_array($portfolioItem->technologies) ? $portfolioItem->technologies : explode(',', $portfolioItem->technologies)) as $tech)
+                                @foreach((is_array($portfolio->technologies) ? $portfolio->technologies : explode(',', $portfolio->technologies)) as $tech)
                                     <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full">
                                         {{ trim($tech) }}
                                     </span>
@@ -131,15 +131,15 @@
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h3>
                 
                 <div class="space-y-3">
-                    <button onclick="toggleProject({{ $portfolioItem->id }})" 
+                    <button onclick="toggleProject({{ $portfolio->id }})" 
                             class="w-full flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
                         </svg>
-                        {{ $portfolioItem->featured ? 'Retirer des favoris' : 'Mettre en avant' }}
+                        {{ $portfolio->featured ? 'Retirer des favoris' : 'Mettre en avant' }}
                     </button>
                     
-                    <form action="{{ route('admin.portfolio.destroy', $portfolioItem) }}" method="POST" class="w-full">
+                    <form action="{{ route('admin.portfolio.destroy', $portfolio->id) }}" method="POST" class="w-full">
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
@@ -161,43 +161,43 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">ID</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">#{{ $portfolioItem->id }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">#{{ $portfolio->id }}</span>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Catégorie</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ ucfirst($portfolioItem->categorie) }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ ucfirst($portfolio->categorie) }}</span>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Statut</span>
-                        <span class="text-sm font-medium {{ $portfolioItem->actif ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $portfolioItem->actif ? 'Actif' : 'Inactif' }}
+                        <span class="text-sm font-medium {{ $portfolio->actif ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $portfolio->actif ? 'Actif' : 'Inactif' }}
                         </span>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Mis en avant</span>
-                        <span class="text-sm font-medium {{ $portfolioItem->featured ? 'text-yellow-600' : 'text-gray-500' }}">
-                            {{ $portfolioItem->featured ? 'Oui' : 'Non' }}
+                        <span class="text-sm font-medium {{ $portfolio->featured ? 'text-yellow-600' : 'text-gray-500' }}">
+                            {{ $portfolio->featured ? 'Oui' : 'Non' }}
                         </span>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Ordre</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolioItem->ordre }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolio->ordre }}</span>
                     </div>
                     
                     <hr class="border-gray-200 dark:border-gray-700">
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Créé le</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolioItem->created_at->format('d/m/Y') }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolio->created_at->format('d/m/Y') }}</span>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Modifié le</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolioItem->updated_at->format('d/m/Y') }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $portfolio->updated_at->format('d/m/Y') }}</span>
                     </div>
                 </div>
             </div>

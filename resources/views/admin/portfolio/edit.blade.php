@@ -21,12 +21,12 @@
                 </svg>
                 <span class="text-blue-600">Modifier</span>
             </div>
-            <p class="text-gray-600 dark:text-gray-300">Modifiez : <strong>{{ $portfolioItem->titre }}</strong></p>
+            <p class="text-gray-600 dark:text-gray-300">Modifiez : <strong>{{ $portfolio->titre }}</strong></p>
         </div>
         
         <!-- Actions rapides -->
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.portfolio.show', $portfolioItem) }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors">
+            <a href="{{ route('admin.portfolio.show', ['portfolio' => $portfolio->id]) }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
@@ -43,7 +43,7 @@
 
     <!-- Formulaire -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form action="{{ route('admin.portfolio.update', $portfolioItem) }}" method="POST" class="space-y-6 p-8">
+        <form action="{{ route('admin.portfolio.update', ['portfolio' => $portfolio->id]) }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
             @csrf
             @method('PUT')
             
@@ -56,7 +56,7 @@
                     <input type="text" 
                            id="titre" 
                            name="titre" 
-                           value="{{ old('titre', $portfolioItem->titre) }}"
+                           value="{{ old('titre', $portfolio->titre) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                            required>
                     @error('titre')
@@ -71,7 +71,7 @@
                     <input type="text" 
                            id="slug" 
                            name="slug" 
-                           value="{{ old('slug', $portfolioItem->slug) }}"
+                           value="{{ old('slug', $portfolio->slug) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors">
                     @error('slug')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -89,12 +89,12 @@
                             name="categorie" 
                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                             required>
-                        <option value="web" {{ old('categorie', $portfolioItem->categorie) == 'web' ? 'selected' : '' }}>Développement Web</option>
-                        <option value="mobile" {{ old('categorie', $portfolioItem->categorie) == 'mobile' ? 'selected' : '' }}>Application Mobile</option>
-                        <option value="design" {{ old('categorie', $portfolioItem->categorie) == 'design' ? 'selected' : '' }}>Design & Branding</option>
-                        <option value="marketing" {{ old('categorie', $portfolioItem->categorie) == 'marketing' ? 'selected' : '' }}>Marketing Digital</option>
-                        <option value="ecommerce" {{ old('categorie', $portfolioItem->categorie) == 'ecommerce' ? 'selected' : '' }}>E-commerce</option>
-                        <option value="autre" {{ old('categorie', $portfolioItem->categorie) == 'autre' ? 'selected' : '' }}>Autre</option>
+                        <option value="web" {{ old('categorie', $portfolio->categorie) == 'web' ? 'selected' : '' }}>Développement Web</option>
+                        <option value="mobile" {{ old('categorie', $portfolio->categorie) == 'mobile' ? 'selected' : '' }}>Application Mobile</option>
+                        <option value="design" {{ old('categorie', $portfolio->categorie) == 'design' ? 'selected' : '' }}>Design & Branding</option>
+                        <option value="marketing" {{ old('categorie', $portfolio->categorie) == 'marketing' ? 'selected' : '' }}>Marketing Digital</option>
+                        <option value="ecommerce" {{ old('categorie', $portfolio->categorie) == 'ecommerce' ? 'selected' : '' }}>E-commerce</option>
+                        <option value="autre" {{ old('categorie', $portfolio->categorie) == 'autre' ? 'selected' : '' }}>Autre</option>
                     </select>
                     @error('categorie')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -102,26 +102,34 @@
                 </div>
                 
                 <div>
-                    <label for="image_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL de l'image *
+                    <label for="image_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Image du projet
                     </label>
-                    <input type="url" 
-                           id="image_url" 
-                           name="image_url" 
-                           value="{{ old('image_url', $portfolioItem->image_url) }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-                           required>
-                    @error('image_url')
+                    <input type="file" 
+                           id="image_file" 
+                           name="image_file" 
+                           accept="image/*"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    @error('image_file')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    @if($portfolioItem->image_url)
-                        <div class="mt-3">
-                            <img src="{{ $portfolioItem->image_url }}" 
-                                 alt="Aperçu" 
-                                 class="w-32 h-20 object-cover rounded-lg"
-                                 onerror="this.style.display='none'">
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Formats acceptés : JPG, PNG, GIF, WEBP (max 5MB)</p>
+                    
+                    <!-- Image actuelle -->
+                    @if($portfolio->image_url)
+                        <div class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Image actuelle :</p>
+                            <img src="{{ str_starts_with($portfolio->image_url, 'http') ? $portfolio->image_url : asset($portfolio->image_url) }}" 
+                                 alt="Image actuelle" 
+                                 class="w-full h-48 rounded-lg object-cover border border-gray-300 dark:border-gray-600">
                         </div>
                     @endif
+                    
+                    <!-- Aperçu de la nouvelle image -->
+                    <div id="imagePreview" class="mt-4 hidden">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Nouvelle image :</p>
+                        <img id="previewImg" src="#" alt="Aperçu" class="max-w-full h-64 rounded-xl object-cover border border-gray-300 dark:border-gray-600">
+                    </div>
                 </div>
             </div>
 
@@ -134,7 +142,7 @@
                           name="description" 
                           rows="5"
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-                          required>{{ old('description', $portfolioItem->description) }}</textarea>
+                          required>{{ old('description', $portfolio->description) }}</textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -148,7 +156,7 @@
                 <input type="text" 
                        id="technologies" 
                        name="technologies" 
-                       value="{{ old('technologies', is_array($portfolioItem->technologies) ? implode(', ', $portfolioItem->technologies) : $portfolioItem->technologies) }}"
+                       value="{{ old('technologies', is_array($portfolio->technologies) ? implode(', ', $portfolio->technologies) : $portfolio->technologies) }}"
                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors">
                 @error('technologies')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -165,7 +173,7 @@
                     <input type="url" 
                            id="lien_demo" 
                            name="lien_demo" 
-                           value="{{ old('lien_demo', $portfolioItem->lien_demo) }}"
+                           value="{{ old('lien_demo', $portfolio->lien_demo) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors">
                     @error('lien_demo')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -179,7 +187,7 @@
                     <input type="url" 
                            id="lien_github" 
                            name="lien_github" 
-                           value="{{ old('lien_github', $portfolioItem->lien_github) }}"
+                           value="{{ old('lien_github', $portfolio->lien_github) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors">
                     @error('lien_github')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -195,7 +203,7 @@
                         <input type="checkbox" 
                                name="featured" 
                                value="1" 
-                               {{ old('featured', $portfolioItem->featured) ? 'checked' : '' }}
+                               {{ old('featured', $portfolio->featured) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Projet mis en avant</span>
                     </label>
@@ -207,7 +215,7 @@
                         <input type="checkbox" 
                                name="actif" 
                                value="1" 
-                               {{ old('actif', $portfolioItem->actif) ? 'checked' : '' }}
+                               {{ old('actif', $portfolio->actif) ? 'checked' : '' }}
                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Projet actif</span>
                     </label>
@@ -220,7 +228,7 @@
                     <input type="number" 
                            id="ordre" 
                            name="ordre" 
-                           value="{{ old('ordre', $portfolioItem->ordre) }}"
+                           value="{{ old('ordre', $portfolio->ordre) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                            min="0">
                     @error('ordre')
@@ -233,8 +241,8 @@
             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4">
                 <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Informations</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
-                    <div>Créé le : {{ $portfolioItem->created_at->format('d/m/Y à H:i') }}</div>
-                    <div>Modifié le : {{ $portfolioItem->updated_at->format('d/m/Y à H:i') }}</div>
+                    <div>Créé le : {{ $portfolio->created_at->format('d/m/Y à H:i') }}</div>
+                    <div>Modifié le : {{ $portfolio->updated_at->format('d/m/Y à H:i') }}</div>
                 </div>
             </div>
 
@@ -246,7 +254,7 @@
                         Annuler
                     </a>
                     
-                    <form action="{{ route('admin.portfolio.destroy', $portfolioItem) }}" method="POST" class="inline">
+                    <form action="{{ route('admin.portfolio.destroy', ['portfolio' => $portfolio->id]) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" 
@@ -265,5 +273,30 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Prévisualisation de l'image
+    document.getElementById('image_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.classList.remove('hidden');
+            }
+            
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.add('hidden');
+        }
+    });
+</script>
+@endpush
+
 @endsection
 

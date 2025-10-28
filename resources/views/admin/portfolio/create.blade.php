@@ -34,7 +34,7 @@
 
     <!-- Formulaire -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form action="{{ route('admin.portfolio.store') }}" method="POST" class="space-y-6 p-8">
+        <form action="{{ route('admin.portfolio.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
             @csrf
             
             <!-- Titre et Slug -->
@@ -95,19 +95,23 @@
                 </div>
                 
                 <div>
-                    <label for="image_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL de l'image *
+                    <label for="image_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Image du projet *
                     </label>
-                    <input type="url" 
-                           id="image_url" 
-                           name="image_url" 
-                           value="{{ old('image_url') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="https://exemple.com/image.jpg"
-                           required>
-                    @error('image_url')
+                    <input type="file" 
+                           id="image_file" 
+                           name="image_file" 
+                           accept="image/*"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    @error('image_file')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Formats acceptés : JPG, PNG, GIF, WEBP (max 5MB). Une image par défaut sera utilisée si aucune image n'est téléchargée.</p>
+                    
+                    <!-- Aperçu de l'image -->
+                    <div id="imagePreview" class="mt-4 hidden">
+                        <img id="previewImg" src="#" alt="Aperçu" class="max-w-full h-64 rounded-xl object-cover border border-gray-300 dark:border-gray-600">
+                    </div>
                 </div>
             </div>
 
@@ -258,6 +262,26 @@
             .trim('-');
         
         document.getElementById('slug').value = slug;
+    });
+
+    // Prévisualisation de l'image
+    document.getElementById('image_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.classList.remove('hidden');
+            }
+            
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.add('hidden');
+        }
     });
 </script>
 @endpush
