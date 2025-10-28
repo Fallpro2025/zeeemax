@@ -4,6 +4,14 @@
 @section('page-title', 'Gestion des Services')  
 @section('page-description', 'Gérez et organisez vos services')
 
+@php
+    // Variables de recherche et filtres (fournies par le contrôleur ou par défaut)
+    $search = $search ?? '';
+    $statut = $statut ?? 'all';
+    $sortBy = $sortBy ?? 'ordre';
+    $sortOrder = $sortOrder ?? 'asc';
+@endphp
+
 @section('content')
 <div x-data="{ selectedServices: [] }">
     
@@ -39,8 +47,11 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Total Services</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Résultats</p>
                         <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $services->count() }}</p>
+                        @if($search || $statut !== 'all')
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Résultats filtrés</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -98,24 +109,41 @@
         <div class="glass dark:glass-dark rounded-2xl overflow-hidden animate-slide-up" style="animation-delay: 0.2s;">
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                <div class="flex items-center justify-between">
+                <form id="filterForm" method="GET" action="{{ route('admin.services.index') }}" class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Liste des Services</h3>
                     <div class="flex items-center space-x-4">
                         <!-- Search -->
                         <div class="relative">
-                            <input type="text" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <input type="text" name="search" id="searchInput" value="{{ $search }}" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
                         <!-- Filter -->
-                        <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                            <option>Tous les statuts</option>
-                            <option>Actifs uniquement</option>
-                            <option>Inactifs uniquement</option>
+                        <select name="statut" id="statutFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <option value="all" {{ $statut === 'all' ? 'selected' : '' }}>Tous les statuts</option>
+                            <option value="actif" {{ $statut === 'actif' ? 'selected' : '' }}>Actifs uniquement</option>
+                            <option value="inactif" {{ $statut === 'inactif' ? 'selected' : '' }}>Inactifs uniquement</option>
                         </select>
+                        <!-- Sort -->
+                        <select name="sort_by" id="sortBy" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <option value="ordre" {{ $sortBy === 'ordre' ? 'selected' : '' }}>Ordre</option>
+                            <option value="titre" {{ $sortBy === 'titre' ? 'selected' : '' }}>Titre</option>
+                            <option value="created_at" {{ $sortBy === 'created_at' ? 'selected' : '' }}>Date de création</option>
+                            <option value="updated_at" {{ $sortBy === 'updated_at' ? 'selected' : '' }}>Dernière modification</option>
+                        </select>
+                        <select name="sort_order" id="sortOrder" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <option value="asc" {{ $sortOrder === 'asc' ? 'selected' : '' }}>↑ Croissant</option>
+                            <option value="desc" {{ $sortOrder === 'desc' ? 'selected' : '' }}>↓ Décroissant</option>
+                        </select>
+                        <!-- Reset -->
+                        @if($search || $statut !== 'all' || $sortBy !== 'ordre')
+                        <a href="{{ route('admin.services.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            Réinitialiser
+                        </a>
+                        @endif
                     </div>
-                </div>
+                </form>
             </div>
             
             <!-- Table Content -->
@@ -141,11 +169,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg mr-4">
+                                    <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg mr-4 flex items-center justify-center admin-icon">
                                         @if($service->icone_svg)
-                                            {!! $service->icone_svg !!}
+                                            {!! $service->getIcone() !!}
                                         @else
-                                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
                                         @endif
@@ -191,10 +219,10 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
                                         </svg>
                                     </button>
-                                    <form method="POST" action="{{ route('admin.services.destroy', $service) }}" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?')">
+                                    <form method="POST" action="{{ route('admin.services.destroy', $service) }}" class="inline delete-form-{{ $service->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 transition-colors" title="Supprimer">
+                                        <button type="button" onclick="confirmDelete({{ $service->id }}, '{{ $service->titre }}', 'services')" class="text-red-600 hover:text-red-900 transition-colors" title="Supprimer">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
@@ -262,31 +290,72 @@
         })
         .then(data => {
             if (data.status === 'success') {
-                // Reload optimisé
-                window.location.reload();
+                window.adminAlert.success('Statut du service modifié avec succès !');
+                setTimeout(() => window.location.reload(), 500);
             } else {
-                window.adminUtils.showToast('Erreur lors de la modification du service', 'error');
+                window.adminAlert.error('Erreur lors de la modification du service');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            window.adminUtils.showToast('Erreur de communication', 'error');
+            window.adminAlert.error('Erreur de communication');
         });
     }
 
-    // Search avec debounce pour performance
+    // Fonction de confirmation de suppression moderne
+    async function confirmDelete(id, name, type) {
+        const confirmed = await window.adminConfirm.confirm(
+            `Êtes-vous sûr de vouloir supprimer "${name}" ? Cette action est irréversible.`,
+            {
+                title: 'Confirmation de suppression',
+                confirmText: 'Supprimer',
+                cancelText: 'Annuler',
+                type: 'danger',
+                confirmClass: 'bg-red-600 hover:bg-red-700',
+                cancelClass: 'bg-gray-500 hover:bg-gray-600'
+            }
+        );
+        
+        if (confirmed) {
+            const form = document.querySelector(`.delete-form-${id}`);
+            window.adminAlert.info('Suppression en cours...');
+            form.submit();
+        }
+    }
+
+    // Recherche et filtres avec soumission automatique
     document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.querySelector('input[placeholder="Rechercher..."]');
+        const filterForm = document.getElementById('filterForm');
+        const searchInput = document.getElementById('searchInput');
+        const statutFilter = document.getElementById('statutFilter');
+        const sortBy = document.getElementById('sortBy');
+        const sortOrder = document.getElementById('sortOrder');
+        
+        // Fonction pour soumettre le formulaire avec debounce
+        const debouncedSubmit = window.adminUtils.debounce(function() {
+            filterForm.submit();
+        }, 500);
+        
+        // Recherche avec debounce (pas de soumission à chaque caractère)
         if (searchInput) {
-            const debouncedSearch = window.adminUtils.debounce(function(value) {
-                // Logique de recherche ici
-                console.log('Searching for:', value);
-            }, 300);
-            
             searchInput.addEventListener('input', function() {
-                debouncedSearch(this.value);
+                // Mettre une icône de chargement visuel
+                const icon = this.nextElementSibling;
+                if (icon) {
+                    icon.classList.add('animate-spin');
+                }
+                debouncedSubmit();
             });
         }
+        
+        // Filtres et tris : soumission immédiate
+        [statutFilter, sortBy, sortOrder].forEach(element => {
+            if (element) {
+                element.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+        });
     });
 </script>
 @endpush

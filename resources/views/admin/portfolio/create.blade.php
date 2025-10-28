@@ -5,9 +5,9 @@
 @section('page-description', 'Ajoutez un nouveau projet à votre portfolio')
 
 @section('content')
-<div >
+<div>
     
-    <!-- Header Section avec navigation -->
+    <!-- Header Section -->
     <div class="flex items-center justify-between mb-8">
         <div>
             <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
@@ -24,12 +24,11 @@
             <p class="text-gray-600 dark:text-gray-300">Ajoutez un nouveau projet à votre portfolio</p>
         </div>
         
-        <!-- Retour Button -->
         <a href="{{ route('admin.portfolio.index') }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Retour à la liste
+            Retour
         </a>
     </div>
 
@@ -48,7 +47,7 @@
                            id="titre" 
                            name="titre" 
                            value="{{ old('titre') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            placeholder="Ex: Site E-commerce Moderne"
                            required>
                     @error('titre')
@@ -64,7 +63,7 @@
                            id="slug" 
                            name="slug" 
                            value="{{ old('slug') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            placeholder="site-ecommerce-moderne">
                     @error('slug')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -80,7 +79,7 @@
                     </label>
                     <select id="categorie" 
                             name="categorie" 
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                             required>
                         <option value="">Choisir une catégorie</option>
                         <option value="web" {{ old('categorie') == 'web' ? 'selected' : '' }}>Développement Web</option>
@@ -103,7 +102,7 @@
                            id="image_url" 
                            name="image_url" 
                            value="{{ old('image_url') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            placeholder="https://exemple.com/image.jpg"
                            required>
                     @error('image_url')
@@ -120,7 +119,7 @@
                 <textarea id="description" 
                           name="description" 
                           rows="5"
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                           placeholder="Décrivez votre projet, les objectifs, les défis relevés..."
                           required>{{ old('description') }}</textarea>
                 @error('description')
@@ -155,7 +154,7 @@
                            id="lien_demo" 
                            name="lien_demo" 
                            value="{{ old('lien_demo') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            placeholder="https://demo.exemple.com">
                     @error('lien_demo')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -170,7 +169,7 @@
                            id="lien_github" 
                            name="lien_github" 
                            value="{{ old('lien_github') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            placeholder="https://github.com/user/projet">
                     @error('lien_github')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -178,7 +177,7 @@
                 </div>
             </div>
 
-            <!-- Options -->
+            <!-- Statut et Ordre -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div>
                     <label class="flex items-center">
@@ -187,7 +186,7 @@
                                name="featured" 
                                value="1" 
                                {{ old('featured') ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Projet mis en avant</span>
                     </label>
                 </div>
@@ -199,7 +198,7 @@
                                name="actif" 
                                value="1" 
                                {{ old('actif', true) ? 'checked' : '' }}
-                               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Projet actif</span>
                     </label>
                 </div>
@@ -212,7 +211,7 @@
                            id="ordre" 
                            name="ordre" 
                            value="{{ old('ordre', 0) }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                            min="0">
                     @error('ordre')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -235,7 +234,7 @@
                         Enregistrer et continuer
                     </button>
                     <button type="submit" 
-                            class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                            class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                         Créer le projet
                     </button>
                 </div>
@@ -262,4 +261,6 @@
     });
 </script>
 @endpush
+
+@endsection
 

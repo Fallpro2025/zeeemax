@@ -23,12 +23,41 @@ class ServiceController extends Controller
     /**
      * Afficher la liste des services
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
-        $services = Service::orderBy('ordre')->get();
-        return view('admin.services.index', compact('services'));
+        // Récupérer les paramètres de recherche et filtre
+        $search = $request->get('search', '');
+        $statut = $request->get('statut', 'all'); // 'all', 'actif', 'inactif'
+        $sortBy = $request->get('sort_by', 'ordre'); // 'ordre', 'titre', 'created_at', 'updated_at'
+        $sortOrder = $request->get('sort_order', 'asc'); // 'asc', 'desc'
+        
+        // Construire la requête
+        $query = Service::query();
+        
+        // Appliquer la recherche
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('titre', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        
+        // Appliquer le filtre de statut
+        if ($statut === 'actif') {
+            $query->where('actif', true);
+        } elseif ($statut === 'inactif') {
+            $query->where('actif', false);
+        }
+        
+        // Appliquer le tri
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $services = $query->get();
+        
+        return view('admin.services.index', compact('services', 'search', 'statut', 'sortBy', 'sortOrder'));
     }
 
     /**
@@ -52,12 +81,20 @@ class ServiceController extends Controller
             'titre' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:services,slug',
             'description' => 'required|string',
-            'icone_svg' => 'required|string',
+            'icone_svg' => 'nullable|string',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
 
         // Si pas de slug fourni, il sera généré automatiquement par le modèle
+        // Nettoyer les espaces autour de l'icône SVG et décoder les entités HTML
+        if (isset($validated['icone_svg'])) {
+            $icone = trim($validated['icone_svg']);
+            // Décoder les entités HTML si elles sont encodées
+            $decoded = html_entity_decode($icone, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $validated['icone_svg'] = $decoded;
+        }
+        
         Service::create($validated);
 
         return redirect()->route('admin.services.index')
@@ -100,11 +137,19 @@ class ServiceController extends Controller
                 Rule::unique('services', 'slug')->ignore($service->id)
             ],
             'description' => 'required|string',
-            'icone_svg' => 'required|string',
+            'icone_svg' => 'nullable|string',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
 
+        // Nettoyer les espaces autour de l'icône SVG et décoder les entités HTML
+        if (isset($validated['icone_svg'])) {
+            $icone = trim($validated['icone_svg']);
+            // Décoder les entités HTML si elles sont encodées
+            $decoded = html_entity_decode($icone, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $validated['icone_svg'] = $decoded;
+        }
+        
         $service->update($validated);
 
         return redirect()->route('admin.services.index')

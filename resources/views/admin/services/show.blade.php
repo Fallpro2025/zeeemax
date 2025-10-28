@@ -65,10 +65,8 @@
             <div class="glass dark:glass-dark rounded-2xl p-8 animate-slide-up">
                 <div class="flex items-start space-x-6">
                     @if($service->icone_svg)
-                        <div class="flex-shrink-0 w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
-                            <div class="w-8 h-8 text-blue-600">
-                                {!! $service->icone_svg !!}
-                            </div>
+                        <div class="flex-shrink-0 w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl p-4 flex items-center justify-center admin-icon">
+                            {!! $service->getIcone() !!}
                         </div>
                     @endif
                     
@@ -105,17 +103,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Aperçu</h4>
-                        <div class="flex items-center justify-center h-32 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl">
-                            <div class="w-12 h-12 text-blue-600">
-                                {!! $service->icone_svg !!}
-                            </div>
+                        <div class="flex items-center justify-center h-32 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl admin-icon">
+                            {!! $service->getIcone() !!}
                         </div>
                     </div>
                     
                     <div>
                         <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Code SVG</h4>
-                        <div class="bg-gray-900 rounded-xl p-4 overflow-x-auto">
-                            <code class="text-green-400 text-sm font-mono break-all">{{ $service->icone_svg }}</code>
+                        <div class="bg-gray-900 rounded-xl p-4 overflow-x-auto max-h-32 overflow-y-auto">
+                            <code class="text-green-400 text-sm font-mono break-all">{{ htmlspecialchars($service->icone_svg) }}</code>
                         </div>
                     </div>
                 </div>
@@ -139,11 +135,11 @@
                         {{ $service->actif ? 'Désactiver' : 'Activer' }}
                     </button>
                     
-                    <form action="{{ route('admin.services.destroy', $service) }}" method="POST" class="w-full">
+                    <form action="{{ route('admin.services.destroy', $service) }}" method="POST" class="w-full delete-form-show">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" 
-                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?')"
+                        <button type="button" 
+                                onclick="confirmDeleteShow('{{ $service->titre }}')"
                                 class="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -241,16 +237,37 @@
         })
         .then(data => {
             if (data.status === 'success') {
-                window.location.reload();
+                window.adminAlert.success('Statut du service modifié avec succès !');
+                setTimeout(() => window.location.reload(), 500);
             } else {
-                window.adminUtils.showToast('Erreur lors de la modification du service', 'error');
+                window.adminAlert.error('Erreur lors de la modification du service');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            window.adminUtils.showToast('Erreur de communication', 'error');
+            window.adminAlert.error('Erreur de communication');
         });
+    }
+
+    // Fonction de confirmation de suppression pour la page show
+    async function confirmDeleteShow(name) {
+        const confirmed = await window.adminConfirm.confirm(
+            `Êtes-vous sûr de vouloir supprimer "${name}" ? Cette action est irréversible.`,
+            {
+                title: 'Confirmation de suppression',
+                confirmText: 'Supprimer',
+                cancelText: 'Annuler',
+                type: 'danger',
+                confirmClass: 'bg-red-600 hover:bg-red-700',
+                cancelClass: 'bg-gray-500 hover:bg-gray-600'
+            }
+        );
+        
+        if (confirmed) {
+            const form = document.querySelector('.delete-form-show');
+            window.adminAlert.info('Suppression en cours...');
+            form.submit();
+        }
     }
 </script>
 @endpush
-

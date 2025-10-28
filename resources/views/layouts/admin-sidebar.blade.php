@@ -206,18 +206,53 @@
     </div>
 
     <!-- Toast Messages -->
-    @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" class="fixed top-4 right-4 z-50 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" class="fixed top-4 right-4 z-50 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
-            {{ session('error') }}
-        </div>
-    @endif
-
     @stack('scripts')
+    
+    <!-- CSS pour forcer les SVG à s'adapter -->
+    <style>
+        /* Override des classes Tailwind pour les SVG dans l'admin */
+        .admin-icon svg {
+            width: 100% !important;
+            height: 100% !important;
+            flex-shrink: 0 !important;
+        }
+    </style>
+    
+    <script>
+        // Corriger les SVG pour qu'ils s'affichent correctement
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.admin-icon svg').forEach(svg => {
+                // Forcer l'affichage
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+            });
+        });
+    </script>
+    
+    <!-- Admin Utils Script -->
+    <script src="{{ asset('js/adminUtils.js') }}"></script>
+    
+    <!-- Admin Alerts System -->
+    <script src="{{ asset('js/admin-alerts.js') }}"></script>
+    
+    <!-- Admin Confirm System -->
+    <script src="{{ asset('js/admin-confirm.js') }}"></script>
+    
+    <!-- Flash Messages vers Alertes -->
+    @if(session('success'))
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.adminAlert.success('{{ session('success') }}');
+        });
+    </script>
+    @endif
+    
+    @if(session('error'))
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.adminAlert.error('{{ session('error') }}');
+        });
+    </script>
+    @endif
 </body>
 </html>

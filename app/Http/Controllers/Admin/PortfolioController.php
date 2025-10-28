@@ -54,13 +54,20 @@ class PortfolioController extends Controller
             'categorie' => 'required|string|max:255',
             'description' => 'required|string',
             'image_url' => 'required|url',
-            'technologies' => 'nullable|array',
+            'technologies' => 'nullable|string',
             'lien_demo' => 'nullable|url',
             'lien_github' => 'nullable|url',
             'featured' => 'boolean',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
+
+        // Convertir les technologies en array si elles sont une chaîne
+        if (isset($validated['technologies']) && is_string($validated['technologies'])) {
+            $validated['technologies'] = array_filter(
+                array_map('trim', explode(',', $validated['technologies']))
+            );
+        }
 
         PortfolioItem::create($validated);
 
@@ -106,13 +113,20 @@ class PortfolioController extends Controller
             'categorie' => 'required|string|max:255',
             'description' => 'required|string',
             'image_url' => 'required|url',
-            'technologies' => 'nullable|array',
+            'technologies' => 'nullable|string',
             'lien_demo' => 'nullable|url',
             'lien_github' => 'nullable|url',
             'featured' => 'boolean',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
+
+        // Convertir les technologies en array si elles sont une chaîne
+        if (isset($validated['technologies']) && is_string($validated['technologies'])) {
+            $validated['technologies'] = array_filter(
+                array_map('trim', explode(',', $validated['technologies']))
+            );
+        }
 
         $portfolioItem->update($validated);
 
