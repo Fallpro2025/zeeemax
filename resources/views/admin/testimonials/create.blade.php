@@ -5,7 +5,7 @@
 @section('page-description', 'Ajoutez un nouveau témoignage client')
 
 @section('content')
-<div >
+<div>
     
     <!-- Header Section -->
     <div class="flex items-center justify-between mb-8">

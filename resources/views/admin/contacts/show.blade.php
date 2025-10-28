@@ -5,7 +5,7 @@
 @section('page-description', 'Détails du message et gestion')
 
 @section('content')
-<div >
+<div>
     
     <!-- Header -->
     <div class="flex items-center justify-between mb-8 animate-fade-in">

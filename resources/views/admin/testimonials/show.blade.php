@@ -5,7 +5,7 @@
 @section('page-description', 'Consultez le témoignage client')
 
 @section('content')
-<div >
+<div>
     
     <!-- Header -->
     <div class="flex items-center justify-between mb-8 animate-fade-in">
@@ -221,3 +221,4 @@
 </script>
 @endpush
 
+@endsection
