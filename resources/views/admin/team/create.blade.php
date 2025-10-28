@@ -34,7 +34,7 @@
 
     <!-- Formulaire -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form action="{{ route('admin.team.store') }}" method="POST" class="space-y-6 p-8">
+        <form action="{{ route('admin.team.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
             @csrf
             
             <!-- Nom et Poste -->
@@ -48,7 +48,7 @@
                            name="nom" 
                            value="{{ old('nom') }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="Ex: Jean Dupont"
+                           placeholder="Bassirou Niang"
                            required>
                     @error('nom')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -89,18 +89,23 @@
                 </div>
                 
                 <div>
-                    <label for="photo_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL de la photo (optionnel)
+                    <label for="photo_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Photo du membre (optionnel)
                     </label>
-                    <input type="url" 
-                           id="photo_url" 
-                           name="photo_url" 
-                           value="{{ old('photo_url') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="https://exemple.com/photo.jpg">
-                    @error('photo_url')
+                    <input type="file" 
+                           id="photo_file" 
+                           name="photo_file" 
+                           accept="image/*"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    @error('photo_file')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Formats acceptés : JPG, PNG, GIF, WEBP (max 2MB). Une photo par défaut sera générée si aucune image n'est téléchargée.</p>
+                    
+                    <!-- Aperçu de la photo -->
+                    <div id="photoPreview" class="mt-4 hidden">
+                        <img id="previewPhotoImg" src="#" alt="Aperçu" class="w-32 h-32 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600">
+                    </div>
                 </div>
             </div>
 
@@ -174,5 +179,25 @@
     </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Aperçu de la photo
+    document.getElementById('photo_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('photoPreview');
+                const previewImg = document.getElementById('previewPhotoImg');
+                previewImg.src = e.target.result;
+                preview.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+@endpush
+
 @endsection
 

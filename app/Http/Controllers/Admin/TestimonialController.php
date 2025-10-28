@@ -52,12 +52,26 @@ class TestimonialController extends Controller
             'profession' => 'required|string|max:255',
             'contenu' => 'required|string',
             'metrique' => 'nullable|string|max:255',
-            'avatar_url' => 'nullable|url',
+            'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'note' => 'integer|min:1|max:5',
             'featured' => 'boolean',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
+
+        // Gérer l'upload de l'avatar
+        $avatarUrl = null;
+        if ($request->hasFile('avatar_file')) {
+            $avatar = $request->file('avatar_file');
+            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images/avatars'), $avatarName);
+            $avatarUrl = 'images/avatars/' . $avatarName;
+        } else {
+            // Avatar par défaut si aucun fichier n'est uploadé
+            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($validated['nom_client']) . '&background=blue&color=fff&size=128';
+        }
+        
+        $validated['avatar_url'] = $avatarUrl;
 
         Testimonial::create($validated);
 
@@ -97,12 +111,26 @@ class TestimonialController extends Controller
             'profession' => 'required|string|max:255',
             'contenu' => 'required|string',
             'metrique' => 'nullable|string|max:255',
-            'avatar_url' => 'nullable|url',
+            'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'note' => 'integer|min:1|max:5',
             'featured' => 'boolean',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
+
+        // Gérer l'upload de l'avatar
+        if ($request->hasFile('avatar_file')) {
+            // Supprimer l'ancien avatar s'il existe et n'est pas un URL externe
+            if ($testimonial->avatar_url && !str_starts_with($testimonial->avatar_url, 'http') && file_exists(public_path($testimonial->avatar_url))) {
+                unlink(public_path($testimonial->avatar_url));
+            }
+            
+            // Uploader le nouveau avatar
+            $avatar = $request->file('avatar_file');
+            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('images/avatars'), $avatarName);
+            $validated['avatar_url'] = 'images/avatars/' . $avatarName;
+        }
 
         $testimonial->update($validated);
 

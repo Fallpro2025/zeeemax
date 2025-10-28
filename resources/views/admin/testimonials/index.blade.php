@@ -138,7 +138,10 @@
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-12 w-12">
                                         @if($testimonial->avatar_url)
-                                            <img class="h-12 w-12 rounded-full object-cover" src="{{ $testimonial->avatar_url }}" alt="{{ $testimonial->nom_client }}">
+                                            <img class="h-12 w-12 rounded-full object-cover" 
+                                                 src="{{ str_starts_with($testimonial->avatar_url, 'http') ? $testimonial->avatar_url : asset($testimonial->avatar_url) }}" 
+                                                 alt="{{ $testimonial->nom_client }}"
+                                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($testimonial->nom_client) }}&background=blue&color=fff&size=48'">
                                         @else
                                             <div class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold">
                                                 {{ substr($testimonial->nom_client, 0, 1) }}
@@ -153,7 +156,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white max-w-xs truncate">
-                                    "{{ Str::limit($testimonial->contenu, 100) }}"
+                                    "{{ Str::limit($testimonial->contenu, 60) }}"
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -212,15 +215,15 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                     </a>
-                                    <form method="POST" action="{{ route('admin.testimonials.destroy', $testimonial) }}" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?')">
+                                    <form method="POST" action="{{ route('admin.testimonials.destroy', $testimonial) }}" class="delete-form-{{ $testimonial->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 transition-colors">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                        </button>
                                     </form>
+                                    <button type="button" onclick="confirmDelete({{ $testimonial->id }}, '{{ $testimonial->nom_client }}', 'témoignage')" class="text-red-600 hover:text-red-900 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -260,6 +263,27 @@
             console.error('Error:', error);
             window.adminUtils.showToast('Erreur de communication', 'error');
         });
+    }
+
+    // Fonction de confirmation de suppression ultra moderne
+    async function confirmDelete(id, name, type) {
+        const confirmed = await window.adminConfirm.confirm(
+            `Êtes-vous sûr de vouloir supprimer ce ${type} de "${name}" ? Cette action est irréversible.`,
+            {
+                title: 'Confirmation de suppression',
+                confirmText: 'Supprimer',
+                cancelText: 'Annuler',
+                type: 'danger',
+                confirmClass: 'bg-red-600 hover:bg-red-700',
+                cancelClass: 'bg-gray-500 hover:bg-gray-600'
+            }
+        );
+        
+        if (confirmed) {
+            const form = document.querySelector(`.delete-form-${id}`);
+            window.adminAlert.info('Suppression en cours...');
+            form.submit();
+        }
     }
 </script>
 @endpush

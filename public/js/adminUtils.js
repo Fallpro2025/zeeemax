@@ -46,22 +46,22 @@ window.adminUtils = {
             'info': 'bg-blue-500'
         };
         
-        toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${colors[type]} transform translate-y-full opacity-0 transition-all duration-300 z-50`;
+        toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${colors[type]} transform translate-y-full opacity-0 transition-all duration-200 z-50`;
         toast.textContent = message;
         
         document.body.appendChild(toast);
         
         // Animation d'entrée
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             toast.classList.remove('translate-y-full', 'opacity-0');
-        }, 100);
+        });
         
         // Animation de sortie
         setTimeout(() => {
             toast.classList.add('translate-y-full', 'opacity-0');
             setTimeout(() => {
                 document.body.removeChild(toast);
-            }, 300);
+            }, 200);
         }, 3000);
     },
     

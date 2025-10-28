@@ -57,9 +57,10 @@
                 <div class="flex items-start space-x-6">
                     @if($team->photo_url)
                         <div class="flex-shrink-0">
-                            <img src="{{ $team->photo_url }}" 
+                            <img src="{{ str_starts_with($team->photo_url, 'http') ? $team->photo_url : asset($team->photo_url) }}" 
                                  alt="{{ $team->nom }}"
-                                 class="w-24 h-24 rounded-full object-cover">
+                                 class="w-24 h-24 rounded-full object-cover"
+                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($team->nom) }}&background=blue&color=fff&size=96'">
                         </div>
                     @else
                         <div class="flex-shrink-0 w-24 h-24 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">

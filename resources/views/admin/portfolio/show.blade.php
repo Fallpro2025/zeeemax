@@ -139,18 +139,18 @@
                         {{ $portfolio->featured ? 'Retirer des favoris' : 'Mettre en avant' }}
                     </button>
                     
-                    <form action="{{ route('admin.portfolio.destroy', $portfolio->id) }}" method="POST" class="w-full">
+                    <form action="{{ route('admin.portfolio.destroy', $portfolio->id) }}" method="POST" class="delete-form-show">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" 
-                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')"
-                                class="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                            Supprimer
-                        </button>
                     </form>
+                    <button type="button" 
+                            onclick="confirmDeleteShow({{ $portfolio->id }}, '{{ $portfolio->titre }}')"
+                            class="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Supprimer
+                    </button>
                 </div>
             </div>
 
@@ -222,6 +222,27 @@
             console.error('Error:', error);
             window.adminUtils.showToast('Erreur de communication', 'error');
         });
+    }
+
+    // Fonction de confirmation de suppression ultra moderne
+    async function confirmDeleteShow(id, name) {
+        const confirmed = await window.adminConfirm.confirm(
+            `Êtes-vous sûr de vouloir supprimer "${name}" ? Cette action est irréversible.`,
+            {
+                title: 'Confirmation de suppression',
+                confirmText: 'Supprimer',
+                cancelText: 'Annuler',
+                type: 'danger',
+                confirmClass: 'bg-red-600 hover:bg-red-700',
+                cancelClass: 'bg-gray-500 hover:bg-gray-600'
+            }
+        );
+        
+        if (confirmed) {
+            const form = document.querySelector('.delete-form-show');
+            window.adminAlert.info('Suppression en cours...');
+            form.submit();
+        }
     }
 </script>
 @endpush

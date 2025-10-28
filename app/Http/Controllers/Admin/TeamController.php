@@ -22,12 +22,41 @@ class TeamController extends Controller
     /**
      * Afficher la liste de l'équipe
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
-        $team = Team::orderBy('ordre')->get();
-        return view('admin.team.index', compact('team'));
+        // Récupérer les paramètres de recherche et filtre
+        $search = $request->get('search', '');
+        $statut = $request->get('statut', 'all'); // 'all', 'actif', 'inactif'
+        $sortBy = $request->get('sort_by', 'ordre'); // 'ordre', 'nom', 'poste', 'created_at', 'updated_at'
+        $sortOrder = $request->get('sort_order', 'asc'); // 'asc', 'desc'
+        
+        // Construire la requête
+        $query = Team::query();
+        
+        // Appliquer la recherche
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('poste', 'like', "%{$search}%")
+                  ->orWhere('bio', 'like', "%{$search}%");
+            });
+        }
+        
+        // Appliquer le filtre de statut
+        if ($statut === 'actif') {
+            $query->where('actif', true);
+        } elseif ($statut === 'inactif') {
+            $query->where('actif', false);
+        }
+        
+        // Appliquer le tri
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $team = $query->get();
+        
+        return view('admin.team.index', compact('team', 'search', 'statut', 'sortBy', 'sortOrder'));
     }
 
     /**
@@ -51,12 +80,25 @@ class TeamController extends Controller
             'nom' => 'required|string|max:255',
             'poste' => 'required|string|max:255',
             'bio' => 'nullable|string',
-            'photo_url' => 'nullable|url',
+            'photo_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'reseau_social' => 'nullable|string',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
 
+        // Gérer l'upload de la photo
+        $photoUrl = null;
+        if ($request->hasFile('photo_file')) {
+            $photo = $request->file('photo_file');
+            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('images/team'), $photoName);
+            $photoUrl = 'images/team/' . $photoName;
+        } else {
+            // Photo par défaut
+            $photoUrl = 'https://ui-avatars.com/api/?name=' . urlencode($validated['nom']) . '&background=blue&color=fff&size=128';
+        }
+        
+        $validated['photo_url'] = $photoUrl;
         $validated['actif'] = $request->has('actif') ? 1 : 0;
         
         Team::create($validated);
@@ -96,11 +138,25 @@ class TeamController extends Controller
             'nom' => 'required|string|max:255',
             'poste' => 'required|string|max:255',
             'bio' => 'nullable|string',
-            'photo_url' => 'nullable|url',
+            'photo_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'reseau_social' => 'nullable|string',
             'actif' => 'boolean',
             'ordre' => 'integer|min:0'
         ]);
+
+        // Gérer l'upload de la photo
+        if ($request->hasFile('photo_file')) {
+            // Supprimer l'ancienne photo si elle existe et n'est pas un URL externe
+            if ($team->photo_url && !str_starts_with($team->photo_url, 'http') && file_exists(public_path($team->photo_url))) {
+                unlink(public_path($team->photo_url));
+            }
+            
+            // Uploader la nouvelle photo
+            $photo = $request->file('photo_file');
+            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('images/team'), $photoName);
+            $validated['photo_url'] = 'images/team/' . $photoName;
+        }
 
         $validated['actif'] = $request->has('actif') ? 1 : 0;
         

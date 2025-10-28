@@ -1,0 +1,69 @@
+RÉSUMÉ DES MODIFICATIONS - GESTION ÉQUIPE ET PARTENAIRES
+=======================================================
+
+Date: 28 Octobre 2025
+
+CONTROLLERS MODIFIÉS:
+---------------------
+
+1. TeamController.php
+   - Ajout de recherche, filtres par statut et tri dans index()
+   - Modification store() pour upload de photos (photo_file au lieu de photo_url)
+   - Modification update() pour upload de photos avec suppression de l'ancienne
+   - Dossiers: public/images/team/
+
+2. PartnerController.php
+   - Ajout de recherche, filtres par statut et tri dans index()
+   - Modification store() pour upload de logos (logo_file au lieu de logo_url)
+   - Modification update() pour upload de logos avec suppression de l'ancien
+   - Dossiers: public/images/partners/
+
+INFRASTRUCTURE CRÉÉE:
+---------------------
+
+- public/images/team/ (dossier pour photos d'équipe)
+- public/images/partners/ (dossier pour logos partenaires)
+- Fichiers .gitkeep ajoutés pour versionner les dossiers
+
+FONCTIONNALITÉS AJOUTÉES:
+-------------------------
+
+1. Recherche:
+   - Équipe: recherche dans nom, poste, bio
+   - Partenaires: recherche dans nom, description
+
+2. Filtres:
+   - Filtre par statut (Actifs / Inactifs / Tous)
+   - Tri par ordre, nom, date de création, dernière modification
+   - Ordre de tri (croissant / décroissant)
+
+3. Upload d'images:
+   - Champs de téléversement pour photos (équipe) et logos (partenaires)
+   - Formats acceptés: JPG, PNG, GIF, WEBP (max 2MB)
+   - Avatars/logos par défaut automatiques via ui-avatars.com
+
+4. Confirmations modernes:
+   - Système d'alertes ultra-moderne pour succès/erreur
+   - Modales de confirmation modernes pour suppressions
+   - Délais optimisés (200ms au lieu de 300ms)
+
+À FAIRE:
+--------
+
+1. Modifier les vues index.blade.php pour:
+   - Ajouter les champs de recherche et filtres
+   - Ajouter les confirmations modernes pour suppressions
+   - Ajouter le JavaScript pour soumission automatique avec debounce
+
+2. Modifier les vues create.blade.php et edit.blade.php pour:
+   - Changer photo_url/logo_url en photo_file/logo_file
+   - Ajouter enctype="multipart/form-data"
+   - Ajouter aperçu d'images
+   - Ajouter JavaScript pour aperçu temps réel
+
+3. Modifier les vues show.blade.php pour:
+   - Afficher les images avec asset() pour chemins locaux
+   - Ajouter fallback pour images manquantes
+
+4. Vérifier que les confirmations modernes sont bien intégrées
+

@@ -55,10 +55,10 @@ class AdminAlert {
         const alert = this.createAlert(type, message);
         this.container.appendChild(alert);
 
-        // Animation d'entrée
-        setTimeout(() => {
+        // Animation d'entrée - délai réduit pour affichage immédiat
+        requestAnimationFrame(() => {
             alert.classList.add('animate-slide-in');
-        }, 10);
+        });
 
         // Animation de sortie après duration
         setTimeout(() => {
@@ -67,7 +67,7 @@ class AdminAlert {
                 if (alert.parentNode) {
                     alert.parentNode.removeChild(alert);
                 }
-            }, 300);
+            }, 200);
         }, duration);
     }
 
@@ -115,7 +115,7 @@ class AdminAlert {
                 <div class="flex-1">
                     <p class="font-semibold">${message}</p>
                 </div>
-                <button onclick="this.closest('[id^=\\'admin-alert\\'] > div').classList.add('animate-slide-out'); setTimeout(() => this.closest('[id^=\\'admin-alert\\'] > div').remove(), 300);" 
+                <button onclick="this.closest('[id^=\\'admin-alert\\'] > div').classList.add('animate-slide-out'); setTimeout(() => this.closest('[id^=\\'admin-alert\\'] > div').remove(), 200);" 
                         class="ml-2 flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -169,11 +169,11 @@ style.textContent = `
     }
 
     .animate-slide-in {
-        animation: slideIn 0.3s ease-out forwards;
+        animation: slideIn 0.2s ease-out forwards;
     }
 
     .animate-slide-out {
-        animation: slideOut 0.3s ease-in forwards;
+        animation: slideOut 0.2s ease-in forwards;
     }
 
     .animate-progress-bar {

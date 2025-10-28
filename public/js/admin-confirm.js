@@ -20,12 +20,12 @@ class AdminConfirm {
             // Créer le backdrop
             const backdrop = document.createElement('div');
             backdrop.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-            backdrop.style.animation = 'fadeIn 0.3s ease-out';
+            backdrop.style.animation = 'fadeIn 0.2s ease-out';
             
             // Créer la modal
             const modal = document.createElement('div');
             modal.className = 'bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 max-w-md w-full transform scale-95 opacity-0';
-            modal.style.animation = 'modalSlideIn 0.3s ease-out forwards';
+            modal.style.animation = 'modalSlideIn 0.2s ease-out forwards';
             
             const iconConfig = {
                 warning: `<svg class="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`,
@@ -58,13 +58,13 @@ class AdminConfirm {
             // Gérer les clics
             const handleAction = (action) => {
                 const modalAnim = modal.style.animation;
-                modal.style.animation = 'modalSlideOut 0.3s ease-in forwards';
-                backdrop.style.animation = 'fadeOut 0.3s ease-in forwards';
+                modal.style.animation = 'modalSlideOut 0.2s ease-in forwards';
+                backdrop.style.animation = 'fadeOut 0.2s ease-in forwards';
                 
                 setTimeout(() => {
                     document.body.removeChild(backdrop);
                     resolve(action === 'confirm');
-                }, 300);
+                }, 200);
             };
             
             modal.querySelector('[data-action="confirm"]').addEventListener('click', () => handleAction('confirm'));
@@ -122,7 +122,7 @@ confirmStyle.textContent = `
     }
 
     .animate-bounce-in {
-        animation: bounceIn 0.5s ease-out;
+        animation: bounceIn 0.3s ease-out;
     }
 `;
 document.head.appendChild(confirmStyle);

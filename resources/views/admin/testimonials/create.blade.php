@@ -34,7 +34,7 @@
 
     <!-- Formulaire -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form action="{{ route('admin.testimonials.store') }}" method="POST" class="space-y-6 p-8">
+        <form action="{{ route('admin.testimonials.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
             @csrf
             
             <!-- Informations client -->
@@ -48,7 +48,7 @@
                            name="nom_client" 
                            value="{{ old('nom_client') }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="Marie Dupont"
+                           placeholder="Alioune Fall"
                            required>
                     @error('nom_client')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -129,18 +129,23 @@
             <!-- Avatar et options -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                    <label for="avatar_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL de l'avatar (optionnel)
+                    <label for="avatar_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Avatar du client (optionnel)
                     </label>
-                    <input type="url" 
-                           id="avatar_url" 
-                           name="avatar_url" 
-                           value="{{ old('avatar_url') }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="https://exemple.com/avatar.jpg">
-                    @error('avatar_url')
+                    <input type="file" 
+                           id="avatar_file" 
+                           name="avatar_file" 
+                           accept="image/*"
+                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    @error('avatar_file')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Formats acceptés : JPG, PNG, GIF, WEBP (max 2MB). Une image par défaut sera utilisée si aucune image n'est téléchargée.</p>
+                    
+                    <!-- Aperçu de l'avatar -->
+                    <div id="avatarPreview" class="mt-4 hidden">
+                        <img id="previewAvatarImg" src="#" alt="Aperçu" class="w-20 h-20 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600">
+                    </div>
                 </div>
                 
                 <div>
@@ -201,5 +206,25 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Aperçu de l'avatar
+    document.getElementById('avatar_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('avatarPreview');
+                const previewImg = document.getElementById('previewAvatarImg');
+                previewImg.src = e.target.result;
+                preview.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+@endpush
+
 @endsection
 
