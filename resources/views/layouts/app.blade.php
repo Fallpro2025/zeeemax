@@ -75,17 +75,27 @@
         $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
         $siteDescription = $siteSettings->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
         $currentUrl = url()->current();
-        $currentTitle = @yield('title', $siteName . ' - Brand Empowerment');
-        $currentDescription = @yield('description', $siteDescription);
-        $ogImage = @yield('og:image', $siteSettings->logo_url ?? asset('images/logo-footer.png'));
-        if (!str_starts_with($ogImage, 'http')) {
-            $ogImage = url($ogImage);
+        $defaultOgImage = $siteSettings->logo_url ?? asset('images/logo-footer.png');
+        if (!str_starts_with($defaultOgImage, 'http')) {
+            $defaultOgImage = url($defaultOgImage);
         }
-        $ogImage = str_replace(' ', '%20', $ogImage);
+        $defaultOgImage = str_replace(' ', '%20', $defaultOgImage);
+    @endphp
+    
+    @php
+        $pageTitle = $siteName . ' - Brand Empowerment';
+        $pageDescription = $siteDescription;
+        $pageOgImage = $defaultOgImage;
     @endphp
     
     <!-- Meta SEO de base -->
-    <meta name="description" content="{{ Str::limit(strip_tags($currentDescription), 160) }}">
+    @php
+        use Illuminate\Support\Facades\View;
+        $seoDescription = View::hasSection('description') ? View::yieldContent('description') : $pageDescription;
+        $seoTitle = View::hasSection('title') ? View::yieldContent('title') : $pageTitle;
+        $seoOgImage = View::hasSection('og:image') ? View::yieldContent('og:image') : $pageOgImage;
+    @endphp
+    <meta name="description" content="{{ Str::limit(strip_tags($seoDescription), 160) }}">
     <meta name="keywords" content="@yield('keywords', 'branding, identité de marque, stratégie digitale, entrepreneur, communication, marketing digital, création de marque')">
     <meta name="author" content="{{ $siteName }}">
     <meta name="robots" content="@yield('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')">
@@ -97,22 +107,22 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og:type', 'website')">
     <meta property="og:url" content="{{ $currentUrl }}">
-    <meta property="og:title" content="{{ $currentTitle }}">
-    <meta property="og:description" content="{{ Str::limit(strip_tags($currentDescription), 200) }}">
-    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($seoDescription), 200) }}">
+    <meta property="og:image" content="{{ $seoOgImage }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="{{ $currentTitle }}">
+    <meta property="og:image:alt" content="{{ $seoTitle }}">
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:locale" content="fr_FR">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ $currentUrl }}">
-    <meta name="twitter:title" content="{{ $currentTitle }}">
-    <meta name="twitter:description" content="{{ Str::limit(strip_tags($currentDescription), 200) }}">
-    <meta name="twitter:image" content="{{ $ogImage }}">
-    <meta name="twitter:image:alt" content="{{ $currentTitle }}">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($seoDescription), 200) }}">
+    <meta name="twitter:image" content="{{ $seoOgImage }}">
+    <meta name="twitter:image:alt" content="{{ $seoTitle }}">
     @if(!empty($siteSettings->twitter))
         <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings->twitter) }}">
     @endif
