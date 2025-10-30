@@ -32,7 +32,7 @@
         </div>
         
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.partners.edit', $partner) }}" class="flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <a href="{{ route('admin.partners.edit', $partner->id) }}" class="flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                 </svg>
@@ -57,9 +57,10 @@
                 <div class="flex items-start space-x-6">
                     @if($partner->logo_url)
                         <div class="flex-shrink-0">
-                            <img src="{{ $partner->logo_url }}" 
+                            <img src="{{ str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url) }}" 
                                  alt="{{ $partner->nom }}"
-                                 class="w-32 h-32 object-contain bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+                                 class="w-32 h-32 object-contain bg-gray-100 dark:bg-gray-800 rounded-lg p-4"
+                                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=blue&color=fff&size=128'">
                         </div>
                     @else
                         <div class="flex-shrink-0 w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">

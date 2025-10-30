@@ -22,12 +22,43 @@ class TestimonialController extends Controller
     /**
      * Afficher la liste des témoignages
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
-        $testimonials = Testimonial::orderBy('ordre')->get();
-        return view('admin.testimonials.index', compact('testimonials'));
+        // Récupérer les paramètres de recherche et filtre
+        $search = $request->get('search', '');
+        $statut = $request->get('statut', 'all'); // 'all', 'actif', 'inactif', 'featured'
+        $sortBy = $request->get('sort_by', 'ordre'); // 'ordre', 'nom_client', 'note', 'created_at', 'updated_at'
+        $sortOrder = $request->get('sort_order', 'asc'); // 'asc', 'desc'
+        
+        // Construire la requête
+        $query = Testimonial::query();
+        
+        // Appliquer la recherche
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('nom_client', 'like', "%{$search}%")
+                  ->orWhere('profession', 'like', "%{$search}%")
+                  ->orWhere('contenu', 'like', "%{$search}%");
+            });
+        }
+        
+        // Appliquer le filtre de statut
+        if ($statut === 'actif') {
+            $query->where('actif', true);
+        } elseif ($statut === 'inactif') {
+            $query->where('actif', false);
+        } elseif ($statut === 'featured') {
+            $query->where('featured', true);
+        }
+        
+        // Appliquer le tri
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $testimonials = $query->get();
+        
+        return view('admin.testimonials.index', compact('testimonials', 'search', 'statut', 'sortBy', 'sortOrder'));
     }
 
     /**
@@ -82,9 +113,11 @@ class TestimonialController extends Controller
     /**
      * Afficher un témoignage spécifique
      */
-    public function show(Testimonial $testimonial)
+    public function show($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $testimonial = Testimonial::findOrFail($id);
         
         return view('admin.testimonials.show', compact('testimonial'));
     }
@@ -92,9 +125,11 @@ class TestimonialController extends Controller
     /**
      * Afficher le formulaire d'édition
      */
-    public function edit(Testimonial $testimonial)
+    public function edit($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $testimonial = Testimonial::findOrFail($id);
         
         return view('admin.testimonials.edit', compact('testimonial'));
     }
@@ -102,9 +137,11 @@ class TestimonialController extends Controller
     /**
      * Mettre à jour un témoignage
      */
-    public function update(Request $request, Testimonial $testimonial)
+    public function update(Request $request, $id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $testimonial = Testimonial::findOrFail($id);
         
         $validated = $request->validate([
             'nom_client' => 'required|string|max:255',
@@ -112,10 +149,10 @@ class TestimonialController extends Controller
             'contenu' => 'required|string',
             'metrique' => 'nullable|string|max:255',
             'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'note' => 'integer|min:1|max:5',
+            'note' => 'required|integer|min:1|max:5',
             'featured' => 'boolean',
             'actif' => 'boolean',
-            'ordre' => 'integer|min:0'
+            'ordre' => 'nullable|integer|min:0'
         ]);
 
         // Gérer l'upload de l'avatar
@@ -131,7 +168,25 @@ class TestimonialController extends Controller
             $avatar->move(public_path('images/avatars'), $avatarName);
             $validated['avatar_url'] = 'images/avatars/' . $avatarName;
         }
+        // Ne pas toucher avatar_url si aucun nouveau fichier n'est uploadé
 
+        // Exclure avatar_file du tableau de mise à jour
+        unset($validated['avatar_file']);
+        
+        // Gérer metrique nullable (préserver si vide ou null)
+        if (!isset($validated['metrique']) || $validated['metrique'] === '' || $validated['metrique'] === null) {
+            $validated['metrique'] = $testimonial->metrique;
+        }
+
+        // Gérer featured et actif
+        $validated['featured'] = $request->has('featured') ? 1 : 0;
+        $validated['actif'] = $request->has('actif') ? 1 : 0;
+        
+        // Gérer ordre (préserver si non fourni)
+        if (!isset($validated['ordre']) || $validated['ordre'] === null) {
+            $validated['ordre'] = $testimonial->ordre ?? 0;
+        }
+        
         $testimonial->update($validated);
 
         return redirect()->route('admin.testimonials.index')
@@ -141,10 +196,11 @@ class TestimonialController extends Controller
     /**
      * Supprimer un témoignage
      */
-    public function destroy(Testimonial $testimonial)
+    public function destroy($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
+        $testimonial = Testimonial::findOrFail($id);
         $testimonial->delete();
 
         return redirect()->route('admin.testimonials.index')

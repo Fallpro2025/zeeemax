@@ -108,9 +108,11 @@ class PartnerController extends Controller
     /**
      * Afficher un partenaire spécifique
      */
-    public function show(Partner $partner)
+    public function show($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $partner = Partner::findOrFail($id);
         
         return view('admin.partners.show', compact('partner'));
     }
@@ -118,9 +120,11 @@ class PartnerController extends Controller
     /**
      * Afficher le formulaire d'édition
      */
-    public function edit(Partner $partner)
+    public function edit($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $partner = Partner::findOrFail($id);
         
         return view('admin.partners.edit', compact('partner'));
     }
@@ -128,17 +132,19 @@ class PartnerController extends Controller
     /**
      * Mettre à jour un partenaire
      */
-    public function update(Request $request, Partner $partner)
+    public function update(Request $request, $id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $partner = Partner::findOrFail($id);
         
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
             'logo_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'site_web' => 'nullable|url',
+            'site_web' => 'nullable|url|max:500',
             'actif' => 'boolean',
-            'ordre' => 'integer|min:0'
+            'ordre' => 'nullable|integer|min:0'
         ]);
 
         // Gérer l'upload du logo
@@ -154,8 +160,28 @@ class PartnerController extends Controller
             $logo->move(public_path('images/partners'), $logoName);
             $validated['logo_url'] = 'images/partners/' . $logoName;
         }
+        // Ne pas toucher logo_url si aucun nouveau fichier n'est uploadé
 
+        // Exclure logo_file du tableau de mise à jour
+        unset($validated['logo_file']);
+        
+        // Gérer actif
         $validated['actif'] = $request->has('actif') ? 1 : 0;
+        
+        // Gérer description nullable (préserver si vide)
+        if (!isset($validated['description']) || $validated['description'] === '') {
+            $validated['description'] = $partner->description;
+        }
+        
+        // Gérer site_web nullable (préserver si vide)
+        if (!isset($validated['site_web']) || $validated['site_web'] === '') {
+            $validated['site_web'] = $partner->site_web;
+        }
+        
+        // Gérer ordre (préserver si non fourni)
+        if (!isset($validated['ordre']) || $validated['ordre'] === null) {
+            $validated['ordre'] = $partner->ordre ?? 0;
+        }
         
         $partner->update($validated);
 
@@ -166,10 +192,11 @@ class PartnerController extends Controller
     /**
      * Supprimer un partenaire
      */
-    public function destroy(Partner $partner)
+    public function destroy($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
+        $partner = Partner::findOrFail($id);
         $partner->delete();
 
         return redirect()->route('admin.partners.index')
@@ -179,12 +206,13 @@ class PartnerController extends Controller
     /**
      * Activer/désactiver un partenaire (AJAX)
      */
-    public function toggle(Partner $partner)
+    public function toggle($id)
     {
         if ($redirect = $this->checkAdminAuth()) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
         }
         
+        $partner = Partner::findOrFail($id);
         $partner->update(['actif' => !$partner->actif]);
         
         return response()->json([

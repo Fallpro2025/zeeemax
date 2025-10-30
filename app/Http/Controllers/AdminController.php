@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\PortfolioItem;
 use App\Models\Testimonial;
 use App\Models\ContactMessage;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,18 +30,17 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        // Identifiants admin temporaires (à changer)
-        $adminEmail = 'admin@zeeemax.com';
-        $adminPassword = 'ZeeeMax2024!';
+        // Rechercher l'administrateur
+        $admin = Admin::where('email', $request->email)->first();
 
-        if ($request->email === $adminEmail && $request->password === $adminPassword) {
-            // Connexion réussie - on peut stocker en session
-            session(['admin_logged_in' => true]);
+        if ($admin && Hash::check($request->password, $admin->password) && $admin->actif) {
+            // Connexion réussie
+            session(['admin_logged_in' => true, 'admin_id' => $admin->id]);
             return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Identifiants incorrects.',
+            'email' => 'Identifiants incorrects ou compte inactif.',
         ])->withInput();
     }
 
@@ -93,7 +93,7 @@ class AdminController extends Controller
      */
     public function logout()
     {
-        session()->forget('admin_logged_in');
+        session()->forget(['admin_logged_in', 'admin_id']);
         return redirect()->route('admin.login')->with('message', 'Déconnexion réussie');
     }
 }

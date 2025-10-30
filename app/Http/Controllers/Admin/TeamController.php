@@ -110,9 +110,11 @@ class TeamController extends Controller
     /**
      * Afficher un membre spécifique
      */
-    public function show(Team $team)
+    public function show($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $team = Team::findOrFail($id);
         
         return view('admin.team.show', compact('team'));
     }
@@ -120,9 +122,11 @@ class TeamController extends Controller
     /**
      * Afficher le formulaire d'édition
      */
-    public function edit(Team $team)
+    public function edit($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $team = Team::findOrFail($id);
         
         return view('admin.team.edit', compact('team'));
     }
@@ -130,9 +134,11 @@ class TeamController extends Controller
     /**
      * Mettre à jour un membre
      */
-    public function update(Request $request, Team $team)
+    public function update(Request $request, $id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
+        
+        $team = Team::findOrFail($id);
         
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
@@ -141,7 +147,7 @@ class TeamController extends Controller
             'photo_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'reseau_social' => 'nullable|string',
             'actif' => 'boolean',
-            'ordre' => 'integer|min:0'
+            'ordre' => 'nullable|integer|min:0'
         ]);
 
         // Gérer l'upload de la photo
@@ -157,8 +163,34 @@ class TeamController extends Controller
             $photo->move(public_path('images/team'), $photoName);
             $validated['photo_url'] = 'images/team/' . $photoName;
         }
+        // Ne pas toucher photo_url si aucun nouveau fichier n'est uploadé
 
+        // Exclure photo_file du tableau de mise à jour
+        unset($validated['photo_file']);
+        
+        // Gérer les réseaux sociaux
+        if (isset($validated['reseau_social']) && !empty(trim($validated['reseau_social']))) {
+            // Si c'est une chaîne, la convertir en array
+            $links = array_filter(array_map('trim', explode(',', $validated['reseau_social'])));
+            // Le modèle gère le cast en array
+            $validated['reseau_social'] = !empty($links) ? $links : null;
+        } else {
+            // Si vide ou non fourni, conserver les réseaux sociaux existants
+            $validated['reseau_social'] = $team->reseau_social;
+        }
+
+        // Gérer bio nullable (préserver si vide)
+        if (!isset($validated['bio']) || $validated['bio'] === '') {
+            $validated['bio'] = $team->bio;
+        }
+
+        // Gérer actif
         $validated['actif'] = $request->has('actif') ? 1 : 0;
+        
+        // Gérer ordre (préserver si non fourni)
+        if (!isset($validated['ordre']) || $validated['ordre'] === null) {
+            $validated['ordre'] = $team->ordre ?? 0;
+        }
         
         $team->update($validated);
 
@@ -169,10 +201,11 @@ class TeamController extends Controller
     /**
      * Supprimer un membre
      */
-    public function destroy(Team $team)
+    public function destroy($id)
     {
         if ($redirect = $this->checkAdminAuth()) return $redirect;
         
+        $team = Team::findOrFail($id);
         $team->delete();
 
         return redirect()->route('admin.team.index')

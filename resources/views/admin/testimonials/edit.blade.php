@@ -48,7 +48,7 @@
 
     <!-- Formulaire -->
     <div class="glass dark:glass-dark rounded-2xl overflow-hidden animate-slide-up">
-        <form action="{{ route('admin.testimonials.update', $testimonial) }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
+        <form action="{{ route('admin.testimonials.update', $testimonial->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-8">
             @csrf
             @method('PUT')
             
@@ -63,6 +63,7 @@
                            name="nom_client" 
                            value="{{ old('nom_client', $testimonial->nom_client) }}"
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                           placeholder="Aida Thiam ou Codou Mbaye"
                            required>
                     @error('nom_client')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -237,17 +238,27 @@
             </div>
         </form>
         
-        <!-- Form de suppression séparé -->
-        <form action="{{ route('admin.testimonials.destroy', $testimonial) }}" method="POST" class="delete-form-edit" style="display: none;">
-            @csrf
-            @method('DELETE')
-        </form>
+        <!-- Formulaire de suppression séparé -->
+        <div class="px-8 pb-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+            <form action="{{ route('admin.testimonials.destroy', $testimonial->id) }}" method="POST" id="delete-form-{{ $testimonial->id }}">
+                @csrf
+                @method('DELETE')
+            </form>
+            <button type="button" 
+                    onclick="confirmDeleteTestimonial({{ $testimonial->id }}, '{{ $testimonial->nom_client }}')"
+                    class="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Supprimer ce témoignage
+            </button>
+        </div>
     </div>
 </div>
 
 @push('scripts')
 <script>
-    // Fonction de confirmation de suppression ultra moderne
+    // Fonction de confirmation de suppression
     async function confirmDeleteTestimonial(id, name) {
         const confirmed = await window.adminConfirm.confirm(
             `Êtes-vous sûr de vouloir supprimer le témoignage de "${name}" ? Cette action est irréversible.`,
@@ -262,7 +273,7 @@
         );
         
         if (confirmed) {
-            const form = document.querySelector('.delete-form-edit');
+            const form = document.getElementById(`delete-form-${id}`);
             window.adminAlert.info('Suppression en cours...');
             form.submit();
         }

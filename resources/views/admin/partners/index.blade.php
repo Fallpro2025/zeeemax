@@ -78,18 +78,41 @@
     <div class="glass dark:glass-dark rounded-2xl overflow-hidden animate-slide-up" style="animation-delay: 0.2s;">
         <!-- Table Header -->
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-            <div class="flex items-center justify-between">
+            <form id="filterForm" method="GET" action="{{ route('admin.partners.index') }}" class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Liste des Partenaires</h3>
                 <div class="flex items-center space-x-4">
                     <!-- Search -->
                     <div class="relative">
-                        <input type="text" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input type="text" name="search" id="searchInput" value="{{ $search }}" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
+                    <!-- Filter -->
+                    <select name="statut" id="statutFilter" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="all" {{ $statut === 'all' ? 'selected' : '' }}>Tous les statuts</option>
+                        <option value="actif" {{ $statut === 'actif' ? 'selected' : '' }}>Actifs uniquement</option>
+                        <option value="inactif" {{ $statut === 'inactif' ? 'selected' : '' }}>Inactifs uniquement</option>
+                    </select>
+                    <!-- Sort -->
+                    <select name="sort_by" id="sortBy" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="ordre" {{ $sortBy === 'ordre' ? 'selected' : '' }}>Ordre</option>
+                        <option value="nom" {{ $sortBy === 'nom' ? 'selected' : '' }}>Nom</option>
+                        <option value="created_at" {{ $sortBy === 'created_at' ? 'selected' : '' }}>Date de création</option>
+                        <option value="updated_at" {{ $sortBy === 'updated_at' ? 'selected' : '' }}>Dernière modification</option>
+                    </select>
+                    <select name="sort_order" id="sortOrder" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="asc" {{ $sortOrder === 'asc' ? 'selected' : '' }}>↑ Croissant</option>
+                        <option value="desc" {{ $sortOrder === 'desc' ? 'selected' : '' }}>↓ Décroissant</option>
+                    </select>
+                    <!-- Reset -->
+                    @if($search || $statut !== 'all' || $sortBy !== 'ordre')
+                    <a href="{{ route('admin.partners.index') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        Réinitialiser
+                    </a>
+                    @endif
                 </div>
-            </div>
+            </form>
         </div>
         
         <!-- Table Content -->
@@ -110,9 +133,12 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($partner->logo_url)
-                                <img class="h-16 w-16 object-contain" src="{{ $partner->logo_url }}" alt="{{ $partner->nom }}">
+                                <img class="h-16 w-16 object-contain bg-gray-100 dark:bg-gray-700 rounded-lg p-2" 
+                                     src="{{ str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url) }}" 
+                                     alt="{{ $partner->nom }}"
+                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=blue&color=fff&size=64'">
                             @else
-                                <div class="h-16 w-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <div class="h-16 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                                     <span class="text-xs text-gray-500 dark:text-gray-400">Pas de logo</span>
                                 </div>
                             @endif
@@ -148,18 +174,21 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-3">
-                                <a href="{{ route('admin.partners.edit', $partner) }}" class="text-blue-600 hover:text-blue-900 transition-colors">
+                                <a href="{{ route('admin.partners.edit', $partner->id) }}" 
+                                   title="Modifier le partenaire"
+                                   class="text-blue-600 hover:text-blue-900 transition-colors"
+                                   onclick="event.stopPropagation(); return true;">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </a>
-                                <a href="{{ route('admin.partners.show', $partner) }}" class="text-green-600 hover:text-green-900 transition-colors">
+                                <a href="{{ route('admin.partners.show', $partner->id) }}" class="text-green-600 hover:text-green-900 transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
                                 </a>
-                                <form method="POST" action="{{ route('admin.partners.destroy', $partner) }}" class="delete-form-{{ $partner->id }}">
+                                <form method="POST" action="{{ route('admin.partners.destroy', $partner->id) }}" class="delete-form-{{ $partner->id }}">
                                     @csrf
                                     @method('DELETE')
                                 </form>
@@ -209,6 +238,40 @@
             form.submit();
         }
     }
+
+    // Recherche et filtres avec soumission automatique
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterForm = document.getElementById('filterForm');
+        const searchInput = document.getElementById('searchInput');
+        const statutFilter = document.getElementById('statutFilter');
+        const sortBy = document.getElementById('sortBy');
+        const sortOrder = document.getElementById('sortOrder');
+        
+        // Fonction pour soumettre le formulaire avec debounce
+        const debouncedSubmit = window.adminUtils.debounce(function() {
+            filterForm.submit();
+        }, 500);
+        
+        // Recherche avec debounce
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const icon = this.nextElementSibling;
+                if (icon) {
+                    icon.classList.add('animate-spin');
+                }
+                debouncedSubmit();
+            });
+        }
+        
+        // Filtres et tris : soumission immédiate
+        [statutFilter, sortBy, sortOrder].forEach(element => {
+            if (element) {
+                element.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+        });
+    });
 </script>
 @endpush
 

@@ -6,31 +6,54 @@
 @section('content')
 <!-- Hero Section - Style Dream Biz avec image de fond et textes courts -->
 <section id="accueil" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Image de fond avec overlay -->
+    <!-- Background dynamique (image ou vidéo) avec overlay -->
     <div class="absolute inset-0">
-        <img src="{{ asset('images/hero-bg.jpg') }}" 
-             alt="Femme entrepreneure travaillant" 
-             class="w-full h-full object-cover object-center"/>
+        @if(isset($homepage) && $homepage && $homepage->background_type === 'video' && $homepage->background_video_url)
+            <!-- Vidéo de fond -->
+            <video autoplay muted loop playsinline class="w-full h-full object-cover object-center">
+                <source src="{{ $homepage->background_video_url }}" type="video/mp4">
+            </video>
+        @elseif(isset($homepage) && $homepage && $homepage->background_type === 'image' && $homepage->background_image_url)
+            <!-- Image de fond dynamique -->
+            <img src="{{ str_starts_with($homepage->background_image_url, 'http') ? $homepage->background_image_url : asset($homepage->background_image_url) }}" 
+                 alt="Background" 
+                 class="w-full h-full object-cover object-center"
+                 onerror="this.src='{{ asset('images/hero-bg.jpg') }}'"/>
+        @else
+            <!-- Image par défaut -->
+            <img src="{{ asset('images/hero-bg.jpg') }}" 
+                 alt="Femme entrepreneure travaillant" 
+                 class="w-full h-full object-cover object-center"/>
+        @endif
         <div class="absolute inset-0 bg-black opacity-60"></div> <!-- Overlay sombre légèrement plus opaque -->
     </div>
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-white text-center py-20">
-        <!-- Titre principal ZEEEMAX: court et impactant -->
+        <!-- Titre principal dynamique -->
         <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight opacity-0 animate-fade-in-up">
-            Révélez votre <br class="hidden sm:block">identité de marque
+            {!! isset($homepage) && $homepage && $homepage->titre ? nl2br(e($homepage->titre)) : 'Révélez votre <br class="hidden sm:block">identité de marque' !!}
         </h1>
         
-        <!-- Sous-titre ZEEEMAX: concis -->
+        <!-- Sous-titre dynamique -->
         <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed opacity-0 animate-fade-in-up animation-delay-200 font-light">
-            Accompagner les entrepreneurs à construire une image forte et impactante.
+            {!! isset($homepage) && $homepage && $homepage->description ? nl2br(e($homepage->description)) : 'Accompagner les entrepreneurs à construire une image forte et impactante.' !!}
         </p>
         
-        <!-- CTA unique -->
+        <!-- CTA dynamique -->
+        @if(isset($homepage) && $homepage && $homepage->bouton_texte && $homepage->bouton_url)
+        <div class="opacity-0 animate-fade-in-up animation-delay-400">
+            <a href="{{ str_starts_with($homepage->bouton_url, '#') || str_starts_with($homepage->bouton_url, '/') ? url($homepage->bouton_url) : $homepage->bouton_url }}" 
+               class="inline-block bg-purple-600 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-purple-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 uppercase tracking-wide">
+                {{ $homepage->bouton_texte }}
+            </a>
+        </div>
+        @else
         <div class="opacity-0 animate-fade-in-up animation-delay-400">
             <a href="#services" class="inline-block bg-purple-600 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-purple-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 uppercase tracking-wide">
                 Découvrir mes services
             </a>
         </div>
+        @endif
     </div>
 </section>
 
@@ -216,6 +239,266 @@
         </div>
     </div>
 </section>
+
+<!-- Partenaires Section - Slider Ultra Moderne -->
+<section class="py-24 bg-gradient-to-br from-gray-50 to-purple-50 overflow-visible relative" style="z-index: 10;">
+    <!-- Background décoration -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%);"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <p class="text-purple-600 font-bold uppercase tracking-widest text-sm mb-4">Nos Partenaires</p>
+            <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">
+                Ils nous font confiance
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto font-light">
+                Des entreprises qui nous font confiance pour leur identité de marque
+            </p>
+        </div>
+        
+        @if(isset($partners) && $partners->count() > 0)
+        <!-- Slider Ultra Moderne -->
+        <div class="relative" style="z-index: 10;">
+            <!-- Masque gradient pour effet fade -->
+            <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-50 via-gray-50 to-transparent z-20 pointer-events-none"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-50 via-gray-50 to-transparent z-20 pointer-events-none"></div>
+            
+            <!-- Flèches de navigation -->
+            <button onclick="scrollPartners(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
+                <svg class="w-6 h-6 text-gray-700 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button onclick="scrollPartners(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
+                <svg class="w-6 h-6 text-gray-700 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            
+            <!-- Container du slider -->
+            <div class="overflow-visible" style="padding-top: 2rem; padding-bottom: 2rem;">
+                <div id="partners-slider" class="partners-slider flex space-x-12 animate-scroll" style="will-change: transform;">
+                    <!-- Première série de logos -->
+                    @foreach($partners as $partner)
+                    <div class="partner-item flex-shrink-0 group" style="z-index: 15;">
+                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2" style="position: relative; z-index: 15;">
+                            @if($partner->site_web)
+                            <a href="{{ $partner->site_web }}" target="_blank" rel="noopener" class="w-full h-full flex items-center justify-center">
+                                <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 
+                                     alt="{{ $partner->nom }}" 
+                                     class="max-w-full max-h-full object-contain transition-all duration-500 opacity-100"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=purple&color=fff&size=128'">
+                            </a>
+                            @else
+                            <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 
+                                 alt="{{ $partner->nom }}" 
+                                 class="max-w-full max-h-full object-contain transition-all duration-500 opacity-100"
+                                 onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=purple&color=fff&size=128'">
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                    
+                    <!-- Duplication pour effet infini -->
+                    @foreach($partners as $partner)
+                    <div class="partner-item flex-shrink-0 group" style="z-index: 15;">
+                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2" style="position: relative; z-index: 15;">
+                            @if($partner->site_web)
+                            <a href="{{ $partner->site_web }}" target="_blank" rel="noopener" class="w-full h-full flex items-center justify-center">
+                                <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 
+                                     alt="{{ $partner->nom }}" 
+                                     class="max-w-full max-h-full object-contain transition-all duration-500 opacity-100"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=purple&color=fff&size=128'">
+                            </a>
+                            @else
+                            <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 
+                                 alt="{{ $partner->nom }}" 
+                                 class="max-w-full max-h-full object-contain transition-all duration-500 opacity-100"
+                                 onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($partner->nom) }}&background=purple&color=fff&size=128'">
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @else
+        <!-- Message si aucun partenaire -->
+        <div class="text-center py-12 bg-white/50 rounded-2xl border-2 border-dashed border-purple-200">
+            <svg class="w-16 h-16 mx-auto text-purple-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
+            </svg>
+            <p class="text-gray-500 text-lg mb-2">Aucun partenaire disponible</p>
+            <p class="text-gray-400 text-sm">Ajoutez des partenaires depuis l'administration</p>
+        </div>
+        @endif
+    </div>
+</section>
+
+@push('styles')
+<style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+    
+    .animate-scroll {
+        animation: scroll 30s linear infinite;
+        display: flex;
+    }
+    
+    .animate-scroll:hover {
+        animation-play-state: paused;
+    }
+    
+    .partner-item {
+        transition: all 0.3s ease;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .partners-slider {
+            animation-duration: 20s;
+        }
+        
+        .partner-item > div {
+            width: 8rem;
+            height: 6rem;
+        }
+        
+        button[onclick*="scrollPartners"] {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    // Variables globales pour le slider
+    if (!window.partnersSliderVars) {
+        window.partnersSliderVars = {
+            currentPosition: 0,
+            isPaused: false,
+            restartTimer: null
+        };
+    }
+    
+    // Fonction pour récupérer la position X actuelle
+    function getCurrentXPosition() {
+        const slider = document.getElementById('partners-slider');
+        if (!slider) return 0;
+        
+        const computedStyle = window.getComputedStyle(slider);
+        const transform = computedStyle.transform || computedStyle.webkitTransform;
+        
+        if (transform && transform !== 'none') {
+            const matrix = transform.match(/matrix\(([^)]+)\)/);
+            if (matrix) {
+                const values = matrix[1].split(',').map(v => parseFloat(v.trim()));
+                return values[4] || 0;
+            }
+        }
+        return 0;
+    }
+    
+    // Déclarer la fonction globalement pour être accessible depuis onclick
+    window.scrollPartners = function(direction) {
+        const vars = window.partnersSliderVars;
+        const slider = document.getElementById('partners-slider');
+        
+        if (!slider) {
+            console.error('Slider not found');
+            return;
+        }
+        
+        // Arrête complètement l'animation CSS
+        slider.style.animation = 'none';
+        slider.style.animationPlayState = 'paused';
+        vars.isPaused = true;
+        
+        // Annule tous les timers
+        if (vars.restartTimer) {
+            clearTimeout(vars.restartTimer);
+        }
+        
+        // Récupère TOUJOURS la position actuelle depuis le transform
+        vars.currentPosition = getCurrentXPosition();
+        
+        // Calcule le déplacement (240px = largeur item + espacement)
+        const scrollAmount = 240 * direction;
+        vars.currentPosition -= scrollAmount;
+        
+        // Applique le défilement avec transition
+        slider.style.transition = 'transform 0.5s ease-out';
+        slider.style.transform = `translateX(${vars.currentPosition}px)`;
+        
+        // Gère l'effet infini
+        const sliderWidth = slider.scrollWidth / 2;
+        if (Math.abs(vars.currentPosition) >= sliderWidth) {
+            vars.currentPosition = vars.currentPosition % sliderWidth;
+            if (vars.currentPosition > 0) vars.currentPosition -= sliderWidth;
+            
+            setTimeout(() => {
+                slider.style.transition = 'none';
+                slider.style.transform = `translateX(${vars.currentPosition}px)`;
+            }, 500);
+        }
+        
+        // Reprend l'animation automatique après 5 secondes
+        vars.restartTimer = setTimeout(() => {
+            vars.isPaused = false;
+            
+            // Remet l'animation CSS depuis le début
+            slider.style.transition = 'none';
+            slider.style.transform = 'translateX(0px)';
+            vars.currentPosition = 0;
+            
+            setTimeout(() => {
+                slider.style.animation = 'scroll 30s linear infinite';
+                slider.style.transform = '';
+            }, 100);
+        }, 5000);
+    };
+    
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        const slider = document.getElementById('partners-slider');
+        if (slider) {
+            const container = slider.closest('.relative');
+            
+            // Initialise les variables si nécessaire
+            if (!window.partnersSliderVars) {
+                window.partnersSliderVars = {
+                    currentPosition: 0,
+                    isPaused: false,
+                    restartTimer: null
+                };
+            }
+            
+            // Pause au survol
+            container.addEventListener('mouseenter', function() {
+                if (!window.partnersSliderVars.isPaused) {
+                    slider.style.animationPlayState = 'paused';
+                }
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                if (!window.partnersSliderVars.isPaused) {
+                    slider.style.animationPlayState = 'running';
+                }
+            });
+        }
+    });
+</script>
+@endpush
 
 <!-- Contact Section -->
 <section id="contact" class="py-20 bg-gray-900 text-white">

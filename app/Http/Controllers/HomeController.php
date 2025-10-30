@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomePageSetting;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -120,7 +122,13 @@ class HomeController extends Controller
             ]
         ]);
 
-        return view('welcome', compact('services', 'testimonials', 'portfolioItems'));
+        // Récupérer les données dynamiques de l'accueil
+        $homepage = HomePageSetting::first();
+        
+        // Récupérer les partenaires actifs
+        $partners = Partner::where('actif', true)->orderBy('ordre')->get();
+
+        return view('welcome', compact('services', 'testimonials', 'portfolioItems', 'homepage', 'partners'));
     }
 
     /**
@@ -136,10 +144,17 @@ class HomeController extends Controller
             'message' => 'required|string|max:5000',
         ]);
 
-        // TODO: Implémenter l'envoi d'email et/ou la sauvegarde en base de données
-        // Pour l'instant, on redirige avec un message de succès
+        // Sauvegarder le message en base de données
+        \App\Models\ContactMessage::create([
+            'prenom' => $validated['first_name'],
+            'nom' => $validated['last_name'],
+            'email' => $validated['email'],
+            'sujet' => $validated['subject'],
+            'message' => $validated['message'],
+            'statut' => 'nouveau'
+        ]);
         
-        return redirect()->route('home')->with('success', 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
+        return redirect()->route('contact.index')->with('success', 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
     }
 }
 

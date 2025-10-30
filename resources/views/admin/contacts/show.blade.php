@@ -41,27 +41,21 @@
         
         <div class="flex items-center space-x-3">
             @if($contact->statut !== 'lu')
-                <form action="{{ route('admin.contacts.mark-read', $contact) }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Marquer lu
-                    </button>
-                </form>
+                <button onclick="markAsRead({{ $contact->id }})" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Marquer lu
+                </button>
             @endif
             
             @if($contact->statut !== 'archive')
-                <form action="{{ route('admin.contacts.archive', $contact) }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8l6 6 6-6"></path>
-                        </svg>
-                        Archiver
-                    </button>
-                </form>
+                <button onclick="archiveMessage({{ $contact->id }})" class="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8l6 6 6-6"></path>
+                    </svg>
+                    Archiver
+                </button>
             @endif
             
             <a href="{{ route('admin.contacts.index') }}" class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
@@ -125,9 +119,7 @@
             <div class="glass dark:glass-dark rounded-2xl p-8 animate-slide-up" style="animation-delay: 0.2s;">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes administratives</h3>
                 
-                <form action="{{ route('admin.contacts.notes', $contact) }}" method="POST" class="space-y-4">
-                    @csrf
-                    
+                <div class="space-y-4">
                     <div>
                         <label for="notes_admin" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Notes internes (privées)
@@ -143,12 +135,13 @@
                     </div>
                     
                     <div class="flex items-center justify-end">
-                        <button type="submit" 
+                        <button type="button" 
+                                onclick="saveNotes({{ $contact->id }})"
                                 class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
                             Enregistrer les notes
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -169,29 +162,23 @@
                     </a>
                     
                     @if($contact->statut !== 'lu')
-                        <form action="{{ route('admin.contacts.mark-read', $contact) }}" method="POST" class="w-full">
-                            @csrf
-                            <button type="submit" 
-                                    class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                Marquer comme lu
-                            </button>
-                        </form>
+                        <button onclick="markAsRead({{ $contact->id }})" 
+                                class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Marquer comme lu
+                        </button>
                     @endif
                     
                     @if($contact->statut !== 'archive')
-                        <form action="{{ route('admin.contacts.archive', $contact) }}" method="POST" class="w-full">
-                            @csrf
-                            <button type="submit" 
-                                    class="w-full flex items-center justify-center px-4 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8l6 6 6-6"></path>
-                                </svg>
-                                Archiver
-                            </button>
-                        </form>
+                        <button onclick="archiveMessage({{ $contact->id }})" 
+                                class="w-full flex items-center justify-center px-4 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8l6 6 6-6"></path>
+                            </svg>
+                            Archiver
+                        </button>
                     @endif
                     
                     <form action="{{ route('admin.contacts.destroy', $contact) }}" method="POST" class="w-full">
@@ -292,5 +279,86 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Fonction pour sauvegarder les notes
+    function saveNotes(contactId) {
+        const notes = document.getElementById('notes_admin').value;
+        
+        // Utiliser FormData pour la compatibilité CSRF
+        const formData = new FormData();
+        formData.append('notes_admin', notes);
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.content || '');
+        
+        fetch(`/admin/contacts/${contactId}/notes`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.adminUtils.showToast('Notes enregistrées avec succès', 'success');
+            } else {
+                window.adminUtils.showToast('Erreur lors de l\'enregistrement', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.adminUtils.showToast('Erreur de communication', 'error');
+        });
+    }
+
+    // Fonction pour marquer un message comme lu
+    async function markAsRead(messageId) {
+        try {
+            const formData = new FormData();
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.content || '');
+            
+            const response = await fetch(`/admin/contacts/${messageId}/mark-read`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                window.adminUtils.showToast('Message marqué comme lu', 'success');
+                setTimeout(() => window.location.reload(), 500);
+            } else {
+                window.adminUtils.showToast('Erreur lors du marquage', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.adminUtils.showToast('Erreur de communication', 'error');
+        }
+    }
+
+    // Fonction pour archiver un message
+    async function archiveMessage(messageId) {
+        try {
+            const formData = new FormData();
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.content || '');
+            
+            const response = await fetch(`/admin/contacts/${messageId}/archive`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                window.adminUtils.showToast('Message archivé', 'success');
+                setTimeout(() => window.location.reload(), 500);
+            } else {
+                window.adminUtils.showToast('Erreur lors de l\'archivage', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.adminUtils.showToast('Erreur de communication', 'error');
+        }
+    }
+</script>
+@endpush
 @endsection
 
