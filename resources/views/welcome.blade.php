@@ -9,10 +9,35 @@
     <!-- Background dynamique (image ou vidéo) avec overlay -->
     <div class="absolute inset-0">
         @if(isset($homepage) && $homepage && $homepage->background_type === 'video' && $homepage->background_video_url)
-            <!-- Vidéo de fond -->
-            <video autoplay muted loop playsinline class="w-full h-full object-cover object-center">
-                <source src="{{ $homepage->background_video_url }}" type="video/mp4">
-            </video>
+            @php
+                $videoUrl = $homepage->background_video_url;
+                $embedUrl = null;
+                if (str_contains($videoUrl, 'youtu.be/')) {
+                    $after = explode('youtu.be/', $videoUrl)[1] ?? '';
+                    $id = strtok($after, '?');
+                    if ($id) {
+                        $embedUrl = 'https://www.youtube.com/embed/'.$id.'?autoplay=1&mute=1&loop=1&playlist='.$id.'&controls=0&showinfo=0&modestbranding=1&iv_load_policy=3&rel=0';
+                    }
+                } elseif (str_contains($videoUrl, 'youtube.com/watch')) {
+                    if (preg_match('/[?&]v=([^&]+)/', $videoUrl, $m)) {
+                        $id = $m[1];
+                        $embedUrl = 'https://www.youtube.com/embed/'.$id.'?autoplay=1&mute=1&loop=1&playlist='.$id.'&controls=0&showinfo=0&modestbranding=1&iv_load_policy=3&rel=0';
+                    }
+                } elseif (str_contains($videoUrl, 'vimeo.com/')) {
+                    $parts = explode('/', trim($videoUrl, '/'));
+                    $id = end($parts);
+                    if ($id && is_numeric($id)) {
+                        $embedUrl = 'https://player.vimeo.com/video/'.$id.'?background=1&autoplay=1&muted=1&loop=1';
+                    }
+                }
+            @endphp
+            @if($embedUrl)
+                <iframe src="{{ $embedUrl }}" title="Background video" class="w-full h-full" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            @else
+                <video autoplay muted loop playsinline class="w-full h-full object-cover object-center">
+                    <source src="{{ str_starts_with($videoUrl, 'http') ? $videoUrl : asset($videoUrl) }}">
+                </video>
+            @endif
         @elseif(isset($homepage) && $homepage && $homepage->background_type === 'image' && $homepage->background_image_url)
             <!-- Image de fond dynamique -->
             <img src="{{ str_starts_with($homepage->background_image_url, 'http') ? $homepage->background_image_url : asset($homepage->background_image_url) }}" 
@@ -148,20 +173,23 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             @foreach($portfolioItems as $item)
             <div class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <img src="{{ $item->image }}" alt="{{ $item->title }}" class="w-full h-64 object-cover object-center transition-transform duration-300 group-hover:scale-105">
+                <img src="{{ str_starts_with($item->image_url, 'http') ? $item->image_url : asset($item->image_url) }}" alt="{{ $item->titre }}" class="w-full h-64 object-cover object-center transition-transform duration-300 group-hover:scale-105">
                 <div class="p-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $item->title }}</h3>
-                    <p class="text-gray-600 text-sm mb-4">{{ $item->category }}</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $item->titre }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ $item->categorie }}</p>
                     <p class="text-gray-700 leading-relaxed font-light mb-6">{{ $item->description }}</p>
-                    <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-700 transition-colors group">
+                    <a href="{{ route('portfolio.show', $item->slug) }}" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-700 transition-colors group">
                         Voir le projet
                         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
+                        </svg>
+                    </a>
                 </div>
             </div>
             @endforeach
+        </div>
+        <div class="text-center mt-12">
+            <a href="{{ route('portfolio.index') }}" class="inline-block bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors">Voir tous les projets</a>
         </div>
     </div>
 </section>
@@ -241,7 +269,7 @@
 </section>
 
 <!-- Partenaires Section - Slider Ultra Moderne -->
-<section class="py-24 bg-gradient-to-br from-gray-50 to-purple-50 overflow-visible relative" style="z-index: 10;">
+<section class="py-24 bg-gradient-to-br from-gray-50 to-purple-50 overflow-visible relative" style="z-index: 30;">
     <!-- Background décoration -->
     <div class="absolute inset-0 opacity-5">
         <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%);"></div>
@@ -260,18 +288,18 @@
         
         @if(isset($partners) && $partners->count() > 0)
         <!-- Slider Ultra Moderne -->
-        <div class="relative" style="z-index: 10;">
+        <div class="relative" style="z-index: 40;">
             <!-- Masque gradient pour effet fade -->
             <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-50 via-gray-50 to-transparent z-20 pointer-events-none"></div>
             <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-50 via-gray-50 to-transparent z-20 pointer-events-none"></div>
             
             <!-- Flèches de navigation -->
-            <button onclick="scrollPartners(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
+            <button onclick="scrollPartners(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
                 <svg class="w-6 h-6 text-gray-700 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </button>
-            <button onclick="scrollPartners(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
+            <button onclick="scrollPartners(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-purple-600 group">
                 <svg class="w-6 h-6 text-gray-700 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -279,11 +307,11 @@
             
             <!-- Container du slider -->
             <div class="overflow-visible" style="padding-top: 2rem; padding-bottom: 2rem;">
-                <div id="partners-slider" class="partners-slider flex space-x-12 animate-scroll" style="will-change: transform;">
+                <div id="partners-slider" class="partners-slider relative z-40 flex space-x-12 animate-scroll" style="will-change: transform;">
                     <!-- Première série de logos -->
                     @foreach($partners as $partner)
-                    <div class="partner-item flex-shrink-0 group" style="z-index: 15;">
-                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2" style="position: relative; z-index: 15;">
+                    <div class="partner-item flex-shrink-0 group relative z-40">
+                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2 relative z-40">
                             @if($partner->site_web)
                             <a href="{{ $partner->site_web }}" target="_blank" rel="noopener" class="w-full h-full flex items-center justify-center">
                                 <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 
@@ -303,8 +331,8 @@
                     
                     <!-- Duplication pour effet infini -->
                     @foreach($partners as $partner)
-                    <div class="partner-item flex-shrink-0 group" style="z-index: 15;">
-                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2" style="position: relative; z-index: 15;">
+                    <div class="partner-item flex-shrink-0 group relative z-40">
+                        <div class="w-48 h-32 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 border border-gray-200 hover:border-purple-400 transform hover:scale-110 hover:-translate-y-2 relative z-40">
                             @if($partner->site_web)
                             <a href="{{ $partner->site_web }}" target="_blank" rel="noopener" class="w-full h-full flex items-center justify-center">
                                 <img src="{{ $partner->logo_url ? (str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset($partner->logo_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->nom) . '&background=purple&color=fff&size=128' }}" 

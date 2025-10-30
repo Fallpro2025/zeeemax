@@ -45,6 +45,9 @@ Route::get('/a-propos', [PublicAproposController::class, 'index'])->name('apropo
 Route::get('/temoignages', [PublicTestimonialController::class, 'index'])->name('testimonials.index');
 Route::get('/equipe', [PublicTeamController::class, 'index'])->name('team.index');
 Route::get('/contact', [PublicContactController::class, 'index'])->name('contact.index');
+// Newsletters public
+Route::get('/newsletters', [\App\Http\Controllers\PublicNewsletterController::class, 'index'])->name('newsletter.index');
+Route::get('/newsletter/{slug}', [\App\Http\Controllers\PublicNewsletterController::class, 'show'])->name('newsletter.show');
 
 // Contact (formulaire)
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
@@ -107,6 +110,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Gestion de l'accueil
     Route::get('homepage', [HomePageController::class, 'index'])->name('homepage.index');
     Route::put('homepage', [HomePageController::class, 'update'])->name('homepage.update');
+
+    // Newsletters (admin)
+    Route::resource('newsletters', \App\Http\Controllers\Admin\NewsletterController::class);
+    Route::post('newsletters/{newsletter}/send', [\App\Http\Controllers\Admin\NewsletterController::class, 'send'])->name('newsletters.send');
+
+    // Abonnés newsletters (admin)
+    Route::get('subscribers', [\App\Http\Controllers\Admin\SubscriberController::class, 'index'])->name('subscribers.index');
+    Route::get('subscribers/create', [\App\Http\Controllers\Admin\SubscriberController::class, 'create'])->name('subscribers.create');
+    Route::post('subscribers', [\App\Http\Controllers\Admin\SubscriberController::class, 'store'])->name('subscribers.store');
+    Route::post('subscribers/{subscriber}/toggle', [\App\Http\Controllers\Admin\SubscriberController::class, 'toggle'])->name('subscribers.toggle');
+    Route::delete('subscribers/{subscriber}', [\App\Http\Controllers\Admin\SubscriberController::class, 'destroy'])->name('subscribers.destroy');
 });
 
 // Routes futures (à décommenter quand les contrôleurs seront créés)

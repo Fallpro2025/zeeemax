@@ -186,22 +186,38 @@
                     </div>
                 </div>
                 
-                <!-- URL Vidéo -->
+                <!-- Vidéo -->
                 <div id="video_section" class="{{ old('background_type', $homepage->background_type) === 'video' ? '' : 'hidden' }}">
-                    <label for="background_video_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        URL de la vidéo d'arrière-plan
-                    </label>
-                    <input type="url" 
-                           id="background_video_url" 
-                           name="background_video_url" 
-                           value="{{ old('background_video_url', $homepage->background_video_url) }}"
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                           placeholder="https://www.youtube.com/watch?v=... ou https://vimeo.com/... ou URL directe">
-                    @error('background_video_url')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">URL YouTube, Vimeo ou lien direct vers un fichier vidéo</p>
-                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="background_video_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                URL de la vidéo d'arrière-plan
+                            </label>
+                            <input type="text" 
+                                   id="background_video_url" 
+                                   name="background_video_url" 
+                                   value="{{ old('background_video_url', $homepage->background_video_url) }}"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                   placeholder="YouTube, Vimeo, ou lien direct (ex: /images/homepage/video.mp4)">
+                            @error('background_video_url')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Laisser vide si vous téléversez un fichier vidéo.</p>
+                        </div>
+                        <div>
+                            <label for="background_video_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Téléverser une vidéo (MP4/WEBM/OGG, max 50MB)
+                            </label>
+                            <input type="file" 
+                                   id="background_video_file" 
+                                   name="background_video_file" 
+                                   accept="video/mp4,video/webm,video/ogg"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                            @error('background_video_file')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                     @if($homepage->background_video_url && old('background_type', $homepage->background_type) === 'video')
                         <div class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl">
                             <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Vidéo actuelle :</p>

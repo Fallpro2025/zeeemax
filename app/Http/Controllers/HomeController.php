@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\HomePageSetting;
 use App\Models\Partner;
+use App\Models\PortfolioItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactMessageReceived;
+use App\Models\Subscriber;
 
 class HomeController extends Controller
 {
@@ -90,37 +94,11 @@ class HomeController extends Controller
             ]
         ]);
 
-        // Données temporaires pour les éléments du portfolio
-        $portfolioItems = collect([
-            (object)[
-                'id' => 1,
-                'title' => 'Refonte de marque',
-                'category' => 'Branding',
-                'description' => 'Création d\'une identité visuelle moderne et percutante pour une startup.',
-                'image' => 'https://picsum.photos/seed/branding/600/400' // Image en ligne pour Portfolio 1
-            ],
-            (object)[
-                'id' => 2,
-                'title' => 'Campagne digitale',
-                'category' => 'Stratégie Digitale',
-                'description' => 'Mise en place d\'une campagne marketing sur les réseaux sociaux avec des résultats exceptionnels.',
-                'image' => 'https://picsum.photos/seed/digital/600/400' // Image en ligne pour Portfolio 2
-            ],
-            (object)[
-                'id' => 3,
-                'title' => 'Site E-commerce',
-                'category' => 'Développement Web',
-                'description' => 'Conception et développement d\'une plateforme e-commerce intuitive et performante.',
-                'image' => 'https://picsum.photos/seed/ecommerce/600/400' // Image en ligne pour Portfolio 3
-            ],
-            (object)[
-                'id' => 4,
-                'title' => 'Contenu vidéo',
-                'category' => 'Communication',
-                'description' => 'Production de vidéos engageantes pour promouvoir les services d\'un coach en ligne.',
-                'image' => 'https://picsum.photos/seed/video/600/400' // Image en ligne pour Portfolio 4
-            ]
-        ]);
+        // 3 derniers projets du portfolio (actifs)
+        $portfolioItems = PortfolioItem::actif()
+            ->orderByDesc('created_at')
+            ->take(3)
+            ->get();
 
         // Récupérer les données dynamiques de l'accueil
         $homepage = HomePageSetting::first();
@@ -153,7 +131,34 @@ class HomeController extends Controller
             'message' => $validated['message'],
             'statut' => 'nouveau'
         ]);
+
+        // Envoyer le message par email aux destinataires souhaités
+        try {
+            $destinataires = [
+                'mbayecodou44@gmail.com',
+                'contact@zeeemax.com',
+            ];
+            Mail::to($destinataires)->send(new ContactMessageReceived($validated));
+        } catch (\Throwable $e) {
+            // On n'interrompt pas l'utilisateur si l'email échoue; journaliser si besoin
+            // logger()->error('Erreur envoi email contact: '.$e->getMessage());
+        }
         
+        // Enregistrer l'email comme abonné (si nouveau)
+        try {
+            Subscriber::updateOrCreate(
+                ['email' => $validated['email']],
+                [
+                    'prenom' => $validated['first_name'] ?? null,
+                    'nom' => $validated['last_name'] ?? null,
+                    'source' => 'contact_form',
+                    'actif' => true,
+                ]
+            );
+        } catch (\Throwable $e) {
+            // ignorer silencieusement si contrainte
+        }
+
         return redirect()->route('contact.index')->with('success', 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
     }
 }

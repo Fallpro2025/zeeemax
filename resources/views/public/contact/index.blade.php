@@ -87,6 +87,7 @@
                 <div>
                     <h3 class="text-2xl font-bold mb-6">Contactez-nous</h3>
                     <div class="space-y-4">
+                        @if(!empty($settings?->email))
                         <div class="flex items-center space-x-4 group">
                             <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,10 +96,12 @@
                             </div>
                             <div>
                                 <p class="font-semibold">Email</p>
-                                <p class="text-gray-300">contact@zeeemax.com</p>
+                                <a href="mailto:{{ $settings->email }}" class="text-gray-300 hover:text-purple-300 transition-colors">{{ $settings->email }}</a>
                             </div>
                         </div>
+                        @endif
                         
+                        @if(!empty($settings?->telephone))
                         <div class="flex items-center space-x-4 group">
                             <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,9 +110,10 @@
                             </div>
                             <div>
                                 <p class="font-semibold">Téléphone</p>
-                                <p class="text-gray-300">+33 1 23 45 67 89</p>
+                                <a href="tel:{{ preg_replace('/\s+/', '', $settings->telephone) }}" class="text-gray-300 hover:text-purple-300 transition-colors">{{ $settings->telephone }}</a>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
                 

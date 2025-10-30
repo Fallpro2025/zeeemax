@@ -47,7 +47,8 @@ class HomePageController extends Controller
             'description' => 'nullable|string',
             'background_type' => 'nullable|in:image,video',
             'background_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'background_video_url' => 'nullable|url|max:500',
+            'background_video_url' => 'nullable|string|max:500',
+            'background_video_file' => 'nullable|mimetypes:video/mp4,video/webm,video/ogg|max:51200',
             'bouton_texte' => 'nullable|string|max:100',
             'bouton_url' => 'nullable|string|max:500',
         ]);
@@ -78,11 +79,26 @@ class HomePageController extends Controller
                 unlink(public_path($homepage->background_image_url));
             }
             $validated['background_image_url'] = null;
+            // Upload vidéo si fournie
+            if ($request->hasFile('background_video_file')) {
+                // Supprimer ancienne vidéo locale si existante
+                if ($homepage->background_video_url && !str_starts_with($homepage->background_video_url, 'http') && file_exists(public_path($homepage->background_video_url))) {
+                    unlink(public_path($homepage->background_video_url));
+                }
+                $video = $request->file('background_video_file');
+                $videoName = time() . '_' . uniqid() . '.' . $video->getClientOriginalExtension();
+                $video->move(public_path('images/homepage'), $videoName);
+                $validated['background_video_url'] = 'images/homepage/' . $videoName;
+            }
         }
 
         // Si background_type est image, supprimer la vidéo
         if ($validated['background_type'] === 'image') {
             $validated['background_video_url'] = null;
+            // Optionnel: supprimer ancienne vidéo locale
+            if ($homepage->background_video_url && !str_starts_with($homepage->background_video_url, 'http') && file_exists(public_path($homepage->background_video_url))) {
+                @unlink(public_path($homepage->background_video_url));
+            }
         }
 
         $homepage->update($validated);

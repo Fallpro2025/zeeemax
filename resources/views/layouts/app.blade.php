@@ -121,27 +121,34 @@
     <nav x-data="{ mobileMenuOpen: false, scrolled: false }" 
          @scroll.window.throttle="scrolled = window.scrollY > 50"
          :class="{ 'bg-white shadow-lg': scrolled, 'bg-black/60 backdrop-blur-sm': !scrolled }"
-         class="fixed top-0 w-full z-50 nav-transition border-b border-transparent"
+         class="fixed top-0 w-full z-50 nav-transition border-b border-transparent overflow-visible"
          :class="{ 'border-gray-100': scrolled }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo ZEEEMAX animé -->
+                <!-- Logo site depuis paramétrage (fallback texte) -->
                 <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
-                    <div class="text-2xl font-bold transition-transform duration-300 group-hover:scale-105"
-                         :class="{ 'text-gray-800': scrolled, 'text-white': !scrolled }">
-                        <span class="">Zee</span>
-                        <span class="text-purple-400 relative">
-                            e
-                            <svg class="absolute -top-1 -right-1 w-3 h-3 text-purple-400 animate-pulse" viewBox="0 0 12 12" fill="currentColor">
-                                <path d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 12L4.5 4.5L6 0Z"/>
-                            </svg>
-                        </span>
-                        <span class="">max</span>
-                    </div>
-                    <div class="text-xs text-purple-400 font-medium tracking-wider hidden sm:block"
-                         :class="{ 'text-purple-600': scrolled, 'text-purple-400': !scrolled }">
-                        BRAND EMPOWERMENT
-                    </div>
+                    @php($logo = $siteSettings?->logo_url)
+                    @if(!empty($logo))
+                        <img src="{{ str_starts_with($logo, 'http') ? $logo : asset($logo) }}"
+                             alt="Logo"
+                             class="h-20 md:h-24 lg:h-28 -my-2 md:-my-4 w-auto max-w-none object-contain transition-transform duration-300 scale-[1.06] group-hover:scale-[1.12] bg-transparent drop-shadow-none"
+                             :class="{ 'drop-shadow-[0_0_2px_rgba(0,0,0,0.8)] contrast-125': scrolled }"
+                             style="aspect-ratio: 578 / 432;"
+                             onerror="this.style.display='none'">
+                    @else
+                        <div class="text-2xl font-bold transition-transform duration-300 group-hover:scale-105"
+                             :class="{ 'text-gray-800': scrolled, 'text-white': !scrolled }">
+                            <span class="">Zee</span>
+                            <span class="text-purple-400 relative">
+                                e
+                                <svg class="absolute -top-1 -right-1 w-3 h-3 text-purple-400 animate-pulse" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 12L4.5 4.5L6 0Z"/>
+                                </svg>
+                            </span>
+                            <span class="">max</span>
+                        </div>
+                    @endif
+                    
                 </a>
                 
                 <!-- Menu desktop -->
@@ -203,14 +210,12 @@
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <!-- Logo et description -->
+                <!-- Logo footer et description -->
                 <div class="md:col-span-2">
-                    <div class="text-3xl font-bold mb-4">
-                        <span class="text-white">Zee</span>
-                        <span class="text-purple-400">e</span>
-                        <span class="text-white">max</span>
-                    </div>
-                    <p class="text-purple-400 font-semibold mb-4">Brand Empowerment</p>
+                    <img src="{{ asset('images/logo-footer.png') }}"
+                         alt="Logo footer"
+                         class="h-24 md:h-28 lg:h-32 w-auto max-w-none object-contain mb-6 bg-transparent"
+                         onerror="this.style.display='none'">
                     <p class="text-gray-400 text-sm max-w-md leading-relaxed">
                         ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.
                     </p>
@@ -232,25 +237,32 @@
                 <div>
                     <h3 class="font-semibold text-lg mb-4">Contact</h3>
                     <ul class="space-y-2 text-sm text-gray-400">
+                        @if(!empty($siteSettings?->email))
                         <li class="flex items-center space-x-2">
                             <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
-                            <span>contact@zeeemax.com</span>
+                            <a href="mailto:{{ $siteSettings->email }}" class="hover:text-purple-300 transition-colors">{{ $siteSettings->email }}</a>
                         </li>
+                        @endif
+                        @if(!empty($siteSettings?->telephone))
                         <li class="flex items-center space-x-2">
                             <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
-                            <span>+33 1 23 45 67 89</span>
+                            <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->telephone) }}" class="hover:text-purple-300 transition-colors">{{ $siteSettings->telephone }}</a>
                         </li>
+                        @endif
+                        @php($adresseComplete = collect([$siteSettings?->adresse, $siteSettings?->code_postal, $siteSettings?->ville, $siteSettings?->pays])->filter()->implode(', '))
+                        @if(!empty($adresseComplete))
                         <li class="flex items-center space-x-2">
                             <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>Paris, France</span>
+                            <span>{{ $adresseComplete }}</span>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>

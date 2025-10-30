@@ -415,3 +415,4 @@ php artisan serve
 
 ---
 [2025-10-30 08:46:32] Sauvegarde: Push général de tout le projet vers origin/main.
+[2025-10-30 16:08:02] Sauvegarde: Push général suite aux mises à jour (logo, newsletters, abonnés, vidéo accueil, partenaires, admin UI).

@@ -57,13 +57,19 @@
     </style>
 </head>
 <body class="font-sans overflow-hidden">
+    @php
+        $loginBgUrl = 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=1926&auto=format&fit=crop';
+        foreach (['gestion.webp','gestion.png','gestion.jpg','gestion.jpeg'] as $name) {
+            if (file_exists(public_path('images/'.$name))) { $loginBgUrl = asset('images/'.$name); break; }
+        }
+    @endphp
     <!-- Container principal avec design split-screen -->
     <div class="min-h-screen flex">
         <!-- Côté gauche - Image avec overlay -->
         <div class="hidden lg:flex lg:w-1/2 relative">
             <!-- Image de fond moderne -->
             <div class="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=1926&auto=format&fit=crop" 
+                <img src="{{ $loginBgUrl }}" 
                      alt="Espace de travail moderne" 
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 gradient-overlay"></div>
@@ -73,11 +79,16 @@
             <div class="relative z-10 flex flex-col justify-center px-12 text-white">
                 <div class="animate-fade-in">
                     <div class="mb-8">
-                        <div class="text-5xl font-bold mb-2 animate-float">
-                            <span class="text-white">Zee</span>
-                            <span class="text-yellow-300">e</span>
-                            <span class="text-white">max</span>
-                        </div>
+                        @php($logo = $siteSettings?->logo_url ?? null)
+                        @if(!empty($logo))
+                            <img src="{{ str_starts_with($logo, 'http') ? $logo : asset($logo) }}" alt="ZEEEMAX" class="h-16 md:h-20 lg:h-24 w-auto object-contain drop-shadow-xl animate-float" onerror="this.style.display='none'">
+                        @else
+                            <div class="text-5xl font-bold mb-2 animate-float">
+                                <span class="text-white">Zee</span>
+                                <span class="text-yellow-300">e</span>
+                                <span class="text-white">max</span>
+                            </div>
+                        @endif
                         <p class="text-xl text-purple-100 font-light">Brand Empowerment</p>
                     </div>
                     
@@ -118,11 +129,16 @@
                 <!-- Header moderne -->
                 <div class="text-center mb-8">
                     <div class="lg:hidden mb-6">
-                        <div class="text-4xl font-bold">
-                            <span class="text-gray-900">Zee</span>
-                            <span class="text-purple-600">e</span>
-                            <span class="text-gray-900">max</span>
-                        </div>
+                        @php($logo = $siteSettings?->logo_url ?? null)
+                        @if(!empty($logo))
+                            <img src="{{ str_starts_with($logo, 'http') ? $logo : asset($logo) }}" alt="ZEEEMAX" class="h-14 w-auto object-contain mx-auto" onerror="this.style.display='none'">
+                        @else
+                            <div class="text-4xl font-bold">
+                                <span class="text-gray-900">Zee</span>
+                                <span class="text-purple-600">e</span>
+                                <span class="text-gray-900">max</span>
+                            </div>
+                        @endif
                         <p class="text-purple-600 font-medium">Brand Empowerment</p>
                     </div>
                     
@@ -242,7 +258,7 @@
     
     <!-- Version mobile - Image de fond -->
     <div class="lg:hidden fixed inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=1926&auto=format&fit=crop" 
+        <img src="{{ $loginBgUrl }}" 
              alt="Espace de travail moderne" 
              class="w-full h-full object-cover opacity-20">
     </div>

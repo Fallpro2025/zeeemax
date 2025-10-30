@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Seeder des valeurs
+        // Seeder des valeurs et newsletters
         $this->call([
             ValeurSeeder::class,
+            NewsletterSeeder::class,
         ]);
     }
 }
