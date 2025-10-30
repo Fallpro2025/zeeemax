@@ -71,15 +71,92 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = window.tailwindConfig;</script>
     
-    <!-- Meta SEO -->
-    <meta name="description" content="@yield('description', 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.')">
-    <meta name="keywords" content="branding, identité de marque, stratégie digitale, entrepreneur, communication">
+    @php
+        $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
+        $siteDescription = $siteSettings->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
+        $currentUrl = url()->current();
+        $currentTitle = @yield('title', $siteName . ' - Brand Empowerment');
+        $currentDescription = @yield('description', $siteDescription);
+        $ogImage = @yield('og:image', $siteSettings->logo_url ?? asset('images/logo-footer.png'));
+        if (!str_starts_with($ogImage, 'http')) {
+            $ogImage = url($ogImage);
+        }
+        $ogImage = str_replace(' ', '%20', $ogImage);
+    @endphp
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="@yield('title', 'ZEEEMAX - Brand Empowerment')">
-    <meta property="og:description" content="@yield('description', 'Révélez votre identité de marque avec ZEEEMAX')">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <!-- Meta SEO de base -->
+    <meta name="description" content="{{ Str::limit(strip_tags($currentDescription), 160) }}">
+    <meta name="keywords" content="@yield('keywords', 'branding, identité de marque, stratégie digitale, entrepreneur, communication, marketing digital, création de marque')">
+    <meta name="author" content="{{ $siteName }}">
+    <meta name="robots" content="@yield('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')">
+    <meta name="googlebot" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ $currentUrl }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@yield('og:type', 'website')">
+    <meta property="og:url" content="{{ $currentUrl }}">
+    <meta property="og:title" content="{{ $currentTitle }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($currentDescription), 200) }}">
+    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $currentTitle }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:locale" content="fr_FR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ $currentUrl }}">
+    <meta name="twitter:title" content="{{ $currentTitle }}">
+    <meta name="twitter:description" content="{{ Str::limit(strip_tags($currentDescription), 200) }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image:alt" content="{{ $currentTitle }}">
+    @if(!empty($siteSettings->twitter))
+        <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings->twitter) }}">
+    @endif
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon.ico') }}">
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ $siteName }}",
+        "url": "{{ url('/') }}",
+        "logo": "{{ url($siteSettings->logo_url ?? 'images/logo-footer.png') }}",
+        "description": "{{ $siteDescription }}"
+        @if(!empty($siteSettings->email))
+        ,"email": "{{ $siteSettings->email }}"
+        @endif
+        @if(!empty($siteSettings->telephone))
+        ,"telephone": "{{ $siteSettings->telephone }}"
+        @endif
+        @php
+            $socialLinks = [];
+            if (!empty($siteSettings->facebook)) $socialLinks[] = $siteSettings->facebook;
+            if (!empty($siteSettings->twitter)) $socialLinks[] = $siteSettings->twitter;
+            if (!empty($siteSettings->instagram)) $socialLinks[] = $siteSettings->instagram;
+            if (!empty($siteSettings->linkedin)) $socialLinks[] = $siteSettings->linkedin;
+            if (!empty($siteSettings->youtube)) $socialLinks[] = $siteSettings->youtube;
+        @endphp
+        @if(count($socialLinks) > 0)
+        ,"sameAs": [
+            {!! '"' . implode('", "', $socialLinks) . '"' !!}
+        ]
+        @endif
+    }
+    </script>
+    
+    <!-- Schema.org pour la page courante -->
+    @stack('schema')
     
     <!-- Styles personnalisés -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">

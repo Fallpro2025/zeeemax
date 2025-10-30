@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" x-data="{ darkMode: false, sidebarOpen: false, openAdmin:true, openPages:true, openContent:true }" :class="{ 'dark': darkMode }">
+<html lang="fr" x-data="{ darkMode: false, sidebarOpen: false, openAdmin: false, openPages: false, openContent: false }" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -137,6 +137,16 @@
                         Dashboard
                     </a>
                     </div>
+                </div>
+                
+                <!-- Section Rapports -->
+                <div class="mb-4">
+                    <a href="{{ route('admin.rapports.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.rapports.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Rapports
+                    </a>
                 </div>
                 
                 <!-- Section Administrateurs -->

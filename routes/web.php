@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\ValeurController;
+use App\Http\Controllers\Admin\RapportController;
 use App\Http\Controllers\PublicServiceController;
 use App\Http\Controllers\PublicPortfolioController;
 use App\Http\Controllers\PublicAproposController;
@@ -33,24 +34,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Page d'accueil
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Page d'accueil (avec tracking)
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('track.visit');
 
-// Pages publiques
-Route::get('/services', [PublicServiceController::class, 'index'])->name('services.index');
-Route::get('/services/{slug}', [PublicServiceController::class, 'show'])->name('services.show');
-Route::get('/portfolio', [PublicPortfolioController::class, 'index'])->name('portfolio.index');
-Route::get('/portfolio/{slug}', [PublicPortfolioController::class, 'show'])->name('portfolio.show');
-Route::get('/a-propos', [PublicAproposController::class, 'index'])->name('apropos.index');
-Route::get('/temoignages', [PublicTestimonialController::class, 'index'])->name('testimonials.index');
-Route::get('/equipe', [PublicTeamController::class, 'index'])->name('team.index');
-Route::get('/contact', [PublicContactController::class, 'index'])->name('contact.index');
+// Pages publiques (avec tracking)
+Route::get('/services', [PublicServiceController::class, 'index'])->name('services.index')->middleware('track.visit');
+Route::get('/services/{slug}', [PublicServiceController::class, 'show'])->name('services.show')->middleware('track.visit');
+Route::get('/portfolio', [PublicPortfolioController::class, 'index'])->name('portfolio.index')->middleware('track.visit');
+Route::get('/portfolio/{slug}', [PublicPortfolioController::class, 'show'])->name('portfolio.show')->middleware('track.visit');
+Route::get('/a-propos', [PublicAproposController::class, 'index'])->name('apropos.index')->middleware('track.visit');
+Route::get('/temoignages', [PublicTestimonialController::class, 'index'])->name('testimonials.index')->middleware('track.visit');
+Route::get('/equipe', [PublicTeamController::class, 'index'])->name('team.index')->middleware('track.visit');
+Route::get('/contact', [PublicContactController::class, 'index'])->name('contact.index')->middleware('track.visit');
 // Newsletters public
-Route::get('/newsletters', [\App\Http\Controllers\PublicNewsletterController::class, 'index'])->name('newsletter.index');
-Route::get('/newsletter/{slug}', [\App\Http\Controllers\PublicNewsletterController::class, 'show'])->name('newsletter.show');
+Route::get('/newsletters', [\App\Http\Controllers\PublicNewsletterController::class, 'index'])->name('newsletter.index')->middleware('track.visit');
+Route::get('/newsletter/{slug}', [\App\Http\Controllers\PublicNewsletterController::class, 'show'])->name('newsletter.show')->middleware('track.visit');
 
 // Contact (formulaire)
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
+
+// Sitemap XML
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
+// Robots.txt dynamique
+Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
 
 // Routes Admin (cachées - pas de liens sur le site)
 Route::get('/admin-panel-access', [AdminController::class, 'showLogin'])->name('admin.login');
@@ -110,6 +117,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Gestion de l'accueil
     Route::get('homepage', [HomePageController::class, 'index'])->name('homepage.index');
     Route::put('homepage', [HomePageController::class, 'update'])->name('homepage.update');
+    
+    // Rapports et statistiques
+    Route::get('rapports', [RapportController::class, 'index'])->name('rapports.index');
 
     // Newsletters (admin)
     Route::resource('newsletters', \App\Http\Controllers\Admin\NewsletterController::class);
