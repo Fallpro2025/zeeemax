@@ -230,19 +230,19 @@
                 
                 <!-- Menu desktop -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('home') }}" class="font-medium transition-colors {{ request()->routeIs('home') ? 'text-purple-600' : '' }}"
+                    <a href="{{ route('home') }}" class="text-lg font-medium transition-colors {{ request()->routeIs('home') ? 'text-purple-600' : '' }}"
                        :class="{ 'text-gray-700 hover:text-purple-600': scrolled, 'text-white hover:text-purple-300': !scrolled }">Accueil</a>
-                    <a href="{{ route('apropos.index') }}" class="font-medium transition-colors {{ request()->routeIs('apropos.*') ? 'text-purple-600' : '' }}"
+                    <a href="{{ route('apropos.index') }}" class="text-lg font-medium transition-colors {{ request()->routeIs('apropos.*') ? 'text-purple-600' : '' }}"
                        :class="{ 'text-gray-700 hover:text-purple-600': scrolled, 'text-white hover:text-purple-300': !scrolled }">À propos</a>
-                    <a href="{{ route('services.index') }}" class="font-medium transition-colors {{ request()->routeIs('services.*') ? 'text-purple-600' : '' }}"
+                    <a href="{{ route('services.index') }}" class="text-lg font-medium transition-colors {{ request()->routeIs('services.*') ? 'text-purple-600' : '' }}"
                        :class="{ 'text-gray-700 hover:text-purple-600': scrolled, 'text-white hover:text-purple-300': !scrolled }">Services</a>
-                    <a href="{{ route('portfolio.index') }}" class="font-medium transition-colors {{ request()->routeIs('portfolio.*') ? 'text-purple-600' : '' }}"
+                    <a href="{{ route('portfolio.index') }}" class="text-lg font-medium transition-colors {{ request()->routeIs('portfolio.*') ? 'text-purple-600' : '' }}"
                        :class="{ 'text-gray-700 hover:text-purple-600': scrolled, 'text-white hover:text-purple-300': !scrolled }">Portfolio</a>
-                    <a href="{{ route('testimonials.index') }}" class="font-medium transition-colors {{ request()->routeIs('testimonials.*') ? 'text-purple-600' : '' }}"
+                    <a href="{{ route('testimonials.index') }}" class="text-lg font-medium transition-colors {{ request()->routeIs('testimonials.*') ? 'text-purple-600' : '' }}"
                        :class="{ 'text-gray-700 hover:text-purple-600': scrolled, 'text-white hover:text-purple-300': !scrolled }">Témoignages</a>
                     <a href="{{ route('contact.index') }}" 
                        :class="{ 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg hover:shadow-xl': scrolled, 'bg-white text-purple-600 hover:bg-gray-100 shadow-md hover:shadow-lg': !scrolled }"
-                       class="px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 font-medium {{ request()->routeIs('contact.*') ? 'bg-purple-600 text-white' : '' }}">
+                       class="text-lg px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 font-medium {{ request()->routeIs('contact.*') ? 'bg-purple-600 text-white' : '' }}">
                         Contact
                     </a>
                 </div>
@@ -268,12 +268,12 @@
              x-transition:leave-end="opacity-0 transform scale-95"
              class="md:hidden bg-white border-t border-gray-100">
             <div class="px-4 py-4 space-y-4">
-                <a href="{{ route('home') }}" class="block text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('home') ? 'text-purple-600 font-bold' : '' }}">Accueil</a>
-                <a href="{{ route('apropos.index') }}" class="block text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('apropos.*') ? 'text-purple-600 font-bold' : '' }}">À propos</a>
-                <a href="{{ route('services.index') }}" class="block text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('services.*') ? 'text-purple-600 font-bold' : '' }}">Services</a>
-                <a href="{{ route('portfolio.index') }}" class="block text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('portfolio.*') ? 'text-purple-600 font-bold' : '' }}">Portfolio</a>
-                <a href="{{ route('testimonials.index') }}" class="block text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('testimonials.*') ? 'text-purple-600 font-bold' : '' }}">Témoignages</a>
-                <a href="{{ route('contact.index') }}" class="block bg-purple-600 text-white px-6 py-2 rounded-full text-center font-medium shadow-lg hover:bg-purple-700 transition-colors">Contact</a>
+                <a href="{{ route('home') }}" class="block text-lg text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('home') ? 'text-purple-600 font-bold' : '' }}">Accueil</a>
+                <a href="{{ route('apropos.index') }}" class="block text-lg text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('apropos.*') ? 'text-purple-600 font-bold' : '' }}">À propos</a>
+                <a href="{{ route('services.index') }}" class="block text-lg text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('services.*') ? 'text-purple-600 font-bold' : '' }}">Services</a>
+                <a href="{{ route('portfolio.index') }}" class="block text-lg text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('portfolio.*') ? 'text-purple-600 font-bold' : '' }}">Portfolio</a>
+                <a href="{{ route('testimonials.index') }}" class="block text-lg text-gray-700 hover:text-purple-600 transition-colors font-medium {{ request()->routeIs('testimonials.*') ? 'text-purple-600 font-bold' : '' }}">Témoignages</a>
+                <a href="{{ route('contact.index') }}" class="block text-lg bg-purple-600 text-white px-6 py-2 rounded-full text-center font-medium shadow-lg hover:bg-purple-700 transition-colors">Contact</a>
             </div>
         </div>
     </nav>
