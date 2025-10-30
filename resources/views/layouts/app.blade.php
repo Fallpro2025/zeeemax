@@ -135,34 +135,37 @@
     <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
     
     <!-- Schema.org JSON-LD -->
+    @php
+        $schemaData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $siteName,
+            'url' => url('/'),
+            'logo' => url($siteSettings->logo_url ?? 'images/logo-footer.png'),
+            'description' => $siteDescription,
+        ];
+        
+        if (!empty($siteSettings->email)) {
+            $schemaData['email'] = $siteSettings->email;
+        }
+        
+        if (!empty($siteSettings->telephone)) {
+            $schemaData['telephone'] = $siteSettings->telephone;
+        }
+        
+        $socialLinks = [];
+        if (!empty($siteSettings->facebook)) $socialLinks[] = $siteSettings->facebook;
+        if (!empty($siteSettings->twitter)) $socialLinks[] = $siteSettings->twitter;
+        if (!empty($siteSettings->instagram)) $socialLinks[] = $siteSettings->instagram;
+        if (!empty($siteSettings->linkedin)) $socialLinks[] = $siteSettings->linkedin;
+        if (!empty($siteSettings->youtube)) $socialLinks[] = $siteSettings->youtube;
+        
+        if (count($socialLinks) > 0) {
+            $schemaData['sameAs'] = $socialLinks;
+        }
+    @endphp
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "{{ $siteName }}",
-        "url": "{{ url('/') }}",
-        "logo": "{{ url($siteSettings->logo_url ?? 'images/logo-footer.png') }}",
-        "description": "{{ $siteDescription }}"
-        @if(!empty($siteSettings->email))
-        ,"email": "{{ $siteSettings->email }}"
-        @endif
-        @if(!empty($siteSettings->telephone))
-        ,"telephone": "{{ $siteSettings->telephone }}"
-        @endif
-        @php
-            $socialLinks = [];
-            if (!empty($siteSettings->facebook)) $socialLinks[] = $siteSettings->facebook;
-            if (!empty($siteSettings->twitter)) $socialLinks[] = $siteSettings->twitter;
-            if (!empty($siteSettings->instagram)) $socialLinks[] = $siteSettings->instagram;
-            if (!empty($siteSettings->linkedin)) $socialLinks[] = $siteSettings->linkedin;
-            if (!empty($siteSettings->youtube)) $socialLinks[] = $siteSettings->youtube;
-        @endphp
-        @if(count($socialLinks) > 0)
-        ,"sameAs": [
-            {!! '"' . implode('", "', $socialLinks) . '"' !!}
-        ]
-        @endif
-    }
+    {!! json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
     
     <!-- Schema.org pour la page courante -->
