@@ -7,69 +7,19 @@
     
     <title>@yield('title', 'ZEEEMAX - Brand Empowerment')</title>
     
-    <!-- Preload ressources critiques -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
-    
-    <!-- Fonts optimisées -->
+    <!-- Resource Hints pour performance maximale -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     
-    <!-- Tailwind CSS CDN optimisé -->
-    <script>
-        // Configuration Tailwind optimisée
-        window.tailwindConfig = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        raleway: ['Raleway', 'sans-serif'],
-                        sans: ['Raleway', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#8B5CF6',
-                        secondary: '#EC4899',
-                        accent: '#F59E0B',
-                    },
-                    animation: {
-                        'fade-in-up': 'fade-in-up 0.4s ease-out forwards',
-                        'blob': 'blob 4s infinite',
-                        'float': 'float 2s ease-in-out infinite',
-                        'pulse-glow': 'pulse-glow 1.5s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        'fade-in-up': {
-                            '0%': { 
-                                opacity: '0',
-                                transform: 'translateY(20px)'
-                            },
-                            '100%': { 
-                                opacity: '1',
-                                transform: 'translateY(0)'
-                            }
-                        },
-                        'blob': {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
-                        },
-                        'float': {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-5px)' }
-                        },
-                        'pulse-glow': {
-                            '0%, 100%': { opacity: '1' },
-                            '50%': { opacity: '0.5' }
-                        }
-                    }
-                }
-            }
-        };
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = window.tailwindConfig;</script>
+    <!-- Préchargement CSS critique -->
+    <link rel="preload" href="{{ asset('css/app.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ asset('css/app.css') }}"></noscript>
+    
+    <!-- Fonts optimisées avec font-display: swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
     
     @php
         $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
@@ -171,38 +121,11 @@
     <!-- Schema.org pour la page courante -->
     @stack('schema')
     
-    <!-- Styles personnalisés -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    
-    <!-- Alpine.js pour interactivité fluide -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- CSS critique inline chargé, le reste est en preload -->
     
     <style>
-        /* Optimisations performance */
-        * { box-sizing: border-box; }
-        img { 
-            loading: lazy;
-            decoding: async;
-        }
-        
-        /* Navigation fluide */
-        .nav-transition {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Box shadow par défaut pour image à propos */
-        .image-about-shadow {
-            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.4);
-        }
-        
-        /* Réduction animations pour performances */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
+        /* CSS critique inline pour performance */
+        *{box-sizing:border-box}img{loading:lazy;decoding:async}.nav-transition{transition:all .2s cubic-bezier(.4,0,.2,1)}.image-about-shadow{box-shadow:0 25px 50px -12px rgba(139,92,246,.4)}@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
     </style>
     @stack('styles')
 </head>
@@ -365,25 +288,17 @@
         </div>
     </footer>
 
-    <!-- Scripts pour smooth scrolling -->
+    <!-- Scripts optimisés - chargement en bas de page -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Smooth scrolling pour les liens d'ancrage
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-        });
+        // Configuration Tailwind (minifiée)
+        window.tailwindConfig={theme:{extend:{fontFamily:{raleway:['Raleway','sans-serif'],sans:['Raleway','sans-serif']},colors:{primary:'#8B5CF6',secondary:'#EC4899',accent:'#F59E0B'},animation:{'fade-in-up':'fade-in-up 0.4s ease-out forwards','blob':'blob 4s infinite','float':'float 2s ease-in-out infinite','pulse-glow':'pulse-glow 1.5s ease-in-out infinite'},keyframes:{'fade-in-up':{'0%':{opacity:'0',transform:'translateY(20px)'},'100%':{opacity:'1',transform:'translateY(0)'}},'blob':{'0%':{transform:'translate(0px, 0px) scale(1)'},'33%':{transform:'translate(30px, -50px) scale(1.1)'},'66%':{transform:'translate(-20px, 20px) scale(0.9)'},'100%':{transform:'translate(0px, 0px) scale(1)'}},'float':{'0%, 100%':{transform:'translateY(0px)'},'50%':{transform:'translateY(-5px)'}},'pulse-glow':{'0%, 100%':{opacity:'1'},'50%':{opacity:'0.5'}}}}}};
     </script>
-    
+    <script defer src="https://cdn.tailwindcss.com" onload="tailwind.config=window.tailwindConfig"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer>
+        // Smooth scrolling (minifié)
+        document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));t&&t.scrollIntoView({behavior:'smooth',block:'start'})})})});
+    </script>
     @stack('scripts')
 </body>
 </html>
