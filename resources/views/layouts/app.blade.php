@@ -124,11 +124,11 @@
     <meta name="twitter:image" content="{{ $seoOgImage }}">
     <meta name="twitter:image:alt" content="{{ $seoTitle }}">
     @if(!empty($siteSettings?->twitter))
-        <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings->twitter) }}">
+        <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings?->twitter) }}">
     @endif
     
     <!-- Favicon -->
-    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.png')
+    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.PNG')
     <link rel="icon" type="image/png" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     
