@@ -72,10 +72,10 @@
     <script>tailwind.config = window.tailwindConfig;</script>
     
     @php
-        $siteName = $siteSettings?->nom_site ?? 'ZEEEMAX';
-        $siteDescription = $siteSettings?->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
+        $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
+        $siteDescription = $siteSettings->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
         $currentUrl = url()->current();
-        $defaultOgImage = $siteSettings?->logo_url ?? asset('images/logo-footer.png');
+        $defaultOgImage = $siteSettings->logo_url ?? asset('images/logo-footer.png');
         if (!str_starts_with($defaultOgImage, 'http')) {
             $defaultOgImage = url($defaultOgImage);
         }
@@ -123,53 +123,48 @@
     <meta name="twitter:description" content="{{ Str::limit(strip_tags($seoDescription), 200) }}">
     <meta name="twitter:image" content="{{ $seoOgImage }}">
     <meta name="twitter:image:alt" content="{{ $seoTitle }}">
-    @if(!empty($siteSettings?->twitter))
-        <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings?->twitter) }}">
+    @if(!empty($siteSettings->twitter))
+        <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings->twitter) }}">
     @endif
     
     <!-- Favicon -->
-    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.PNG')
-    <link rel="icon" type="image/png" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
+    @php
+        $faviconUrl = !empty($siteSettings->logo_url) ? $siteSettings->logo_url : asset('images/logo-footer.png');
+        if (!str_starts_with($faviconUrl, 'http')) {
+            $faviconUrl = asset($faviconUrl);
+        }
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ $faviconUrl }}">
     
     <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
     
     <!-- Schema.org JSON-LD -->
     @php
-        // Logo : utiliser celui des paramètres ou le logo par défaut
-        $logoUrl = !empty($siteSettings?->logo_url) 
-            ? $siteSettings?->logo_url 
-            : 'images/logo-footer.PNG';
-        
-        // Convertir en URL absolue si nécessaire
-        $logoAbsoluteUrl = str_starts_with($logoUrl, 'http') 
-            ? $logoUrl 
-            : url($logoUrl);
-        
         $schemaData = [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
-            'name' => $siteName ?? 'ZEEEMAX',
+            'name' => $siteName,
             'url' => url('/'),
-            'logo' => $logoAbsoluteUrl,
-            'description' => $siteDescription ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.'
+            'logo' => url($siteSettings->logo_url ?? 'images/logo-footer.png'),
+            'description' => $siteDescription
         ];
         
-        if (!empty($siteSettings?->email)) {
+        if (!empty($siteSettings->email)) {
             $schemaData['email'] = $siteSettings->email;
         }
         
-        if (!empty($siteSettings?->telephone)) {
+        if (!empty($siteSettings->telephone)) {
             $schemaData['telephone'] = $siteSettings->telephone;
         }
         
         $socialLinks = [];
-        if (!empty($siteSettings?->facebook)) $socialLinks[] = $siteSettings->facebook;
-        if (!empty($siteSettings?->twitter)) $socialLinks[] = $siteSettings->twitter;
-        if (!empty($siteSettings?->instagram)) $socialLinks[] = $siteSettings->instagram;
-        if (!empty($siteSettings?->linkedin)) $socialLinks[] = $siteSettings->linkedin;
-        if (!empty($siteSettings?->youtube)) $socialLinks[] = $siteSettings->youtube;
+        if (!empty($siteSettings->facebook)) $socialLinks[] = $siteSettings->facebook;
+        if (!empty($siteSettings->twitter)) $socialLinks[] = $siteSettings->twitter;
+        if (!empty($siteSettings->instagram)) $socialLinks[] = $siteSettings->instagram;
+        if (!empty($siteSettings->linkedin)) $socialLinks[] = $siteSettings->linkedin;
+        if (!empty($siteSettings->youtube)) $socialLinks[] = $siteSettings->youtube;
         
         if (count($socialLinks) > 0) {
             $schemaData['sameAs'] = $socialLinks;
