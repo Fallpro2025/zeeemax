@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HomePageSetting;
 use App\Models\Partner;
 use App\Models\PortfolioItem;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMessageReceived;
@@ -103,10 +104,13 @@ class HomeController extends Controller
         // Récupérer les données dynamiques de l'accueil
         $homepage = HomePageSetting::first();
         
+        // Récupérer les paramètres du site pour les infos de contact
+        $siteSettings = SiteSetting::first();
+        
         // Récupérer les partenaires actifs
         $partners = Partner::where('actif', true)->orderBy('ordre')->get();
 
-        return view('welcome', compact('services', 'testimonials', 'portfolioItems', 'homepage', 'partners'));
+        return view('welcome', compact('services', 'testimonials', 'portfolioItems', 'homepage', 'partners', 'siteSettings'));
     }
 
     /**
