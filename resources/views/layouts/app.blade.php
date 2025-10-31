@@ -361,7 +361,7 @@
             
             <div class="border-t border-gray-800 pt-8 text-center">
                 <p class="text-gray-500 text-sm">
-                    © {{ date('Y') }} ZEEEMAX. Tous droits réservés. | Designed with ❤️ for entrepreneurs
+                    © {{ date('Y') }} ZEEEMAX. Tous droits réservés. | Conçu avec ❤️
                 </p>
             </div>
         </div>
