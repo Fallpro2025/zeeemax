@@ -22,3 +22,23 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Fichiers de cache Laravel (exclure tous sauf .gitignore)
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+!/storage/framework/cache/data/.gitignore
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+# Fichiers SQL (dumps de base de données)
+*.sql
+zeeemax.sql
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~
