@@ -116,16 +116,6 @@
                         @endif
                     </div>
                 </div>
-                
-                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
-                    <h4 class="font-bold text-xl mb-4">Prendre RDV gratuit</h4>
-                    <p class="text-gray-300 mb-6 leading-relaxed">
-                        Réservez un appel découverte de 30 minutes pour échanger sur votre projet et découvrir comment ZEEEMAX peut vous aider.
-                    </p>
-                    <a href="#contact-form" class="inline-block bg-white text-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        Réserver maintenant
-                    </a>
-                </div>
             </div>
         </div>
     </div>
