@@ -128,7 +128,7 @@
     @endif
     
     <!-- Favicon -->
-    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.PNG')
+    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.png')
     <link rel="icon" type="image/png" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     
