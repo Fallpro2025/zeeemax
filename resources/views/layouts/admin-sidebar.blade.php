@@ -8,7 +8,9 @@
     <title>@yield('title', 'Admin ZEEEMAX')</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/symbole.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/symbole.png') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('images/symbole.png') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('images/symbole.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/symbole.png') }}">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">

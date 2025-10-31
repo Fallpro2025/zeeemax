@@ -610,6 +610,13 @@
                     </div>
                 </div>
                 
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                    <h4 class="font-bold text-xl mb-4">Prendre RDV gratuit</h4>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        Réservez un appel découverte de 30 minutes pour échanger sur votre projet et découvrir comment ZEEEMAX peut vous aider.
+                    </p>
+                </div>
+                
                 <!-- Réseaux sociaux -->
                 @if(!empty($siteSettings?->facebook) || !empty($siteSettings?->instagram) || !empty($siteSettings?->linkedin) || !empty($siteSettings?->twitter) || !empty($siteSettings?->youtube))
                 <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
