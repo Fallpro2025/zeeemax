@@ -137,39 +137,47 @@
     
     <!-- Schema.org JSON-LD -->
     @php
+        // Logo : utiliser celui des paramètres ou le logo par défaut
+        $logoUrl = !empty($siteSettings?->logo_url) 
+            ? $siteSettings->logo_url 
+            : 'images/logo-footer.PNG';
+        
+        // Convertir en URL absolue si nécessaire
+        $logoAbsoluteUrl = str_starts_with($logoUrl, 'http') 
+            ? $logoUrl 
+            : url($logoUrl);
+        
         $schemaData = [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
-            'name' => $siteName,
+            'name' => $siteName ?? 'ZEEEMAX',
             'url' => url('/'),
-            'logo' => url($siteSettings?->logo_url ?? 'images/logo-footer.png'),
-            'description' => $siteDescription
+            'logo' => $logoAbsoluteUrl,
+            'description' => $siteDescription ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.'
         ];
         
         if (!empty($siteSettings?->email)) {
-            $schemaData['email'] = $siteSettings?->email;
+            $schemaData['email'] = $siteSettings->email;
         }
         
         if (!empty($siteSettings?->telephone)) {
-            $schemaData['telephone'] = $siteSettings?->telephone;
+            $schemaData['telephone'] = $siteSettings->telephone;
         }
         
         $socialLinks = [];
-        if (!empty($siteSettings?->facebook)) $socialLinks[] = $siteSettings?->facebook;
-        if (!empty($siteSettings?->twitter)) $socialLinks[] = $siteSettings?->twitter;
-        if (!empty($siteSettings?->instagram)) $socialLinks[] = $siteSettings?->instagram;
-        if (!empty($siteSettings?->linkedin)) $socialLinks[] = $siteSettings?->linkedin;
-        if (!empty($siteSettings?->youtube)) $socialLinks[] = $siteSettings?->youtube;
+        if (!empty($siteSettings?->facebook)) $socialLinks[] = $siteSettings->facebook;
+        if (!empty($siteSettings?->twitter)) $socialLinks[] = $siteSettings->twitter;
+        if (!empty($siteSettings?->instagram)) $socialLinks[] = $siteSettings->instagram;
+        if (!empty($siteSettings?->linkedin)) $socialLinks[] = $siteSettings->linkedin;
+        if (!empty($siteSettings?->youtube)) $socialLinks[] = $siteSettings->youtube;
         
         if (count($socialLinks) > 0) {
             $schemaData['sameAs'] = $socialLinks;
         }
     @endphp
-    @if(isset($schemaData))
     <script type="application/ld+json">
     {!! json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
-    @endif
     
     <!-- Schema.org pour la page courante -->
     @stack('schema')
