@@ -147,27 +147,29 @@
         ];
         
         if (!empty($siteSettings?->email)) {
-            $schemaData['email'] = $siteSettings->email;
+            $schemaData['email'] = $siteSettings?->email;
         }
         
         if (!empty($siteSettings?->telephone)) {
-            $schemaData['telephone'] = $siteSettings->telephone;
+            $schemaData['telephone'] = $siteSettings?->telephone;
         }
         
         $socialLinks = [];
-        if (!empty($siteSettings?->facebook)) $socialLinks[] = $siteSettings->facebook;
-        if (!empty($siteSettings?->twitter)) $socialLinks[] = $siteSettings->twitter;
-        if (!empty($siteSettings?->instagram)) $socialLinks[] = $siteSettings->instagram;
-        if (!empty($siteSettings?->linkedin)) $socialLinks[] = $siteSettings->linkedin;
-        if (!empty($siteSettings?->youtube)) $socialLinks[] = $siteSettings->youtube;
+        if (!empty($siteSettings?->facebook)) $socialLinks[] = $siteSettings?->facebook;
+        if (!empty($siteSettings?->twitter)) $socialLinks[] = $siteSettings?->twitter;
+        if (!empty($siteSettings?->instagram)) $socialLinks[] = $siteSettings?->instagram;
+        if (!empty($siteSettings?->linkedin)) $socialLinks[] = $siteSettings?->linkedin;
+        if (!empty($siteSettings?->youtube)) $socialLinks[] = $siteSettings?->youtube;
         
         if (count($socialLinks) > 0) {
             $schemaData['sameAs'] = $socialLinks;
         }
     @endphp
+    @if(isset($schemaData))
     <script type="application/ld+json">
     {!! json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
     </script>
+    @endif
     
     <!-- Schema.org pour la page courante -->
     @stack('schema')
