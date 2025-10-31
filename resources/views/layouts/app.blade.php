@@ -128,14 +128,8 @@
     @endif
     
     <!-- Favicon -->
-    @php
-        $faviconUrl = !empty($siteSettings->logo_url) ? $siteSettings->logo_url : asset('images/logo-footer.png');
-        if (!str_starts_with($faviconUrl, 'http')) {
-            $faviconUrl = asset($faviconUrl);
-        }
-    @endphp
-    <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ $faviconUrl }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/symbole.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/symbole.png') }}">
     
     <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
