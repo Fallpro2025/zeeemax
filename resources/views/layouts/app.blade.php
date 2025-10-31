@@ -139,7 +139,7 @@
     @php
         // Logo : utiliser celui des paramètres ou le logo par défaut
         $logoUrl = !empty($siteSettings?->logo_url) 
-            ? $siteSettings->logo_url 
+            ? $siteSettings?->logo_url 
             : 'images/logo-footer.PNG';
         
         // Convertir en URL absolue si nécessaire
