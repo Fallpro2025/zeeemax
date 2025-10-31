@@ -72,10 +72,10 @@
     <script>tailwind.config = window.tailwindConfig;</script>
     
     @php
-        $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
-        $siteDescription = $siteSettings->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
+        $siteName = $siteSettings?->nom_site ?? 'ZEEEMAX';
+        $siteDescription = $siteSettings?->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
         $currentUrl = url()->current();
-        $defaultOgImage = $siteSettings->logo_url ?? asset('images/logo-footer.png');
+        $defaultOgImage = $siteSettings?->logo_url ?? asset('images/logo-footer.png');
         if (!str_starts_with($defaultOgImage, 'http')) {
             $defaultOgImage = url($defaultOgImage);
         }
@@ -123,12 +123,12 @@
     <meta name="twitter:description" content="{{ Str::limit(strip_tags($seoDescription), 200) }}">
     <meta name="twitter:image" content="{{ $seoOgImage }}">
     <meta name="twitter:image:alt" content="{{ $seoTitle }}">
-    @if(!empty($siteSettings->twitter))
+    @if(!empty($siteSettings?->twitter))
         <meta name="twitter:site" content="{{ '@' . str_replace('@', '', $siteSettings->twitter) }}">
     @endif
     
     <!-- Favicon -->
-    @php($faviconUrl = $siteSettings->logo_url ?? 'images/logo-footer.PNG')
+    @php($faviconUrl = $siteSettings?->logo_url ?? 'images/logo-footer.PNG')
     <link rel="icon" type="image/png" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ str_starts_with($faviconUrl, 'http') ? $faviconUrl : asset($faviconUrl) }}">
     
