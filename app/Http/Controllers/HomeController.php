@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HomePageSetting;
 use App\Models\Partner;
+use App\Models\Client;
 use App\Models\PortfolioItem;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
@@ -18,30 +19,34 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Données temporaires pour les services
-        $services = collect([
-            (object)[
-                'id' => 1,
-                'title' => 'Branding sur-mesure',
-                'slug' => 'branding',
-                'description' => 'Révélez votre identité unique avec un branding aligné à vos valeurs. Logo, charte graphique, identité visuelle complète qui vous ressemble.',
-                'icon' => '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>'
-            ],
-            (object)[
-                'id' => 2,
-                'title' => 'Communication alignée',
-                'slug' => 'communication',
-                'description' => 'Structurez votre communication pour toucher votre audience avec des messages percutants et cohérents qui reflètent votre essence.',
-                'icon' => '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>'
-            ],
-            (object)[
-                'id' => 3,
-                'title' => 'Stratégie digitale',
-                'slug' => 'strategie-digitale',
-                'description' => 'Développez votre visibilité en ligne avec une stratégie digitale impactante et des outils performants pour atteindre vos objectifs.',
-                'icon' => '<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>'
-            ]
-        ]);
+        // Récupérer les services depuis la base de données (max 6 services)
+        // S'assurer que "Conception web" et "Application" sont toujours inclus
+        $tousLesServices = \App\Models\Service::actif()->ordre()->get();
+        
+        // Récupérer "Conception web" et "Application" en priorité
+        $conceptionWeb = $tousLesServices->where('slug', 'conception-web')->first();
+        $application = $tousLesServices->where('slug', 'application')->first();
+        
+        // Exclure ces deux services du reste
+        $autresServices = $tousLesServices->whereNotIn('slug', ['conception-web', 'application']);
+        
+        // Combiner : Conception web + Application + autres services (jusqu'à 4 autres pour avoir max 6)
+        $services = collect();
+        
+        if ($conceptionWeb) {
+            $services->push($conceptionWeb);
+        }
+        if ($application) {
+            $services->push($application);
+        }
+        
+        // Ajouter les autres services jusqu'à avoir 6 au total
+        foreach ($autresServices as $service) {
+            if ($services->count() >= 6) {
+                break;
+            }
+            $services->push($service);
+        }
 
         // Données temporaires pour les témoignages
         $testimonials = collect([
@@ -95,8 +100,9 @@ class HomeController extends Controller
             ]
         ]);
 
-        // 3 derniers projets du portfolio (actifs)
+        // Récupérer 3 projets du portfolio (actifs) ordonnés par ordre puis par date
         $portfolioItems = PortfolioItem::actif()
+            ->orderBy('ordre')
             ->orderByDesc('created_at')
             ->take(3)
             ->get();
@@ -109,8 +115,11 @@ class HomeController extends Controller
         
         // Récupérer les partenaires actifs
         $partners = Partner::where('actif', true)->orderBy('ordre')->get();
+        
+        // Récupérer les clients actifs
+        $clients = Client::where('actif', true)->orderBy('ordre')->get();
 
-        return view('welcome', compact('services', 'testimonials', 'portfolioItems', 'homepage', 'partners', 'siteSettings'));
+        return view('welcome', compact('services', 'testimonials', 'portfolioItems', 'homepage', 'partners', 'siteSettings', 'clients'));
     }
 
     /**

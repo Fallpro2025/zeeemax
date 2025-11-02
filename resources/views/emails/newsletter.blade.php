@@ -20,7 +20,7 @@
                                     <td valign="middle">
                                         <div style="display:flex; align-items:center; gap:12px;">
                                             <!-- Logo (fallback au texte si non dispo) -->
-                                            <img src="{{ asset('images/logo-footer.png') }}" alt="ZEEEMAX" style="height:40px; width:auto; display:block; border:0; outline:none; text-decoration:none;">
+                                            <img src="{{ asset('images/logo-footer.PNG') }}" alt="ZEEEMAX" style="height:40px; width:auto; display:block; border:0; outline:none; text-decoration:none;">
                                             <span style="font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#fff; letter-spacing:1px; opacity:.9;">NEWSLETTER</span>
                                         </div>
                                     </td>

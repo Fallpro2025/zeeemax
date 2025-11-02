@@ -4,8 +4,9 @@
 @section('description', 'Recevez nos meilleures ressources et actualités')
 
 @section('content')
-<section class="py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-gray-50 overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <h1 class="text-4xl font-bold mb-10">Newsletters</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($articles as $a)
@@ -28,6 +29,10 @@
         <div class="mt-8">{{ $articles->links() }}</div>
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 
 

@@ -5,15 +5,15 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
+<section class="relative py-56 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-20">
         <div class="absolute inset-0" style="background-image: url('{{ asset('images/hero-bg.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center">
             <p class="text-purple-300 font-bold uppercase tracking-widest text-sm mb-4 animate-fade-in-up">Portfolio</p>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight animate-fade-in-up animation-delay-200">
-                Découvrez nos<br class="hidden sm:block"> projets à succès
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight title-gradient-glass" style="opacity: 0.95;">
+                Découvrez nos projets à succès
             </h1>
             <p class="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400">
                 Un aperçu de notre travail avec des entrepreneurs passionnés
@@ -23,8 +23,9 @@
 </section>
 
 <!-- Filter & Portfolio Grid -->
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-white overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         @if($categories->count() > 0)
         <div class="flex flex-wrap justify-center gap-4 mb-12">
             <button onclick="filterPortfolio('all')" class="filter-btn active px-6 py-2 rounded-full bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors" data-filter="all">
@@ -52,7 +53,7 @@
                     </div>
                     <div class="p-8">
                         <span class="text-purple-600 text-sm font-bold uppercase tracking-wider mb-2 block">{{ $item->categorie }}</span>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $item->titre }}</h3>
+                        <h3 class="text-2xl font-black mb-4 tracking-tight title-gradient-glass-sm">{{ $item->titre }}</h3>
                         <p class="text-gray-700 leading-relaxed font-light mb-6">{{ substr($item->description, 0, 120) }}{{ strlen($item->description) > 120 ? '...' : '' }}</p>
                         <a href="{{ route('portfolio.show', $item->slug) }}" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-700 transition-colors group">
                             Voir le projet
@@ -75,7 +76,7 @@
 <!-- CTA Section -->
 <section class="py-20 bg-purple-600 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl md:text-5xl font-black mb-6">
+        <h2 class="text-4xl md:text-5xl font-black mb-6 tracking-tight title-gradient-glass">
             Votre projet sera le prochain ?
         </h2>
         <p class="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
@@ -89,6 +90,7 @@
 @endsection
 
 @push('scripts')
+@include('partials.anime-scripts')
 <script>
     function filterPortfolio(category) {
         const items = document.querySelectorAll('.portfolio-item');

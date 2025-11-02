@@ -5,13 +5,13 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
+<section class="relative py-56 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-20">
         <div class="absolute inset-0" style="background-image: url('{{ asset('images/hero-bg.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center">
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight title-gradient-glass" style="opacity: 0.95;">
                 Notre équipe
             </h1>
             <p class="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
@@ -22,8 +22,9 @@
 </section>
 
 <!-- Team Grid -->
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-white overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         @if($team->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($team as $member)
@@ -42,7 +43,8 @@
                         <div class="flex justify-center gap-4 mt-4">
                             @foreach($member->reseau_social as $key => $url)
                                 @if($url)
-                                <a href="{{ $url }}" target="_blank" rel="noopener" class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-600 hover:text-white transition-colors">
+                                <a href="{{ $url }}" target="_blank" rel="noopener" class="icon-3d-gradient w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300">
+                                    <div class="icon-svg-wrapper">
                                     @if($key === 'linkedin')
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                                     @elseif($key === 'twitter')
@@ -50,6 +52,7 @@
                                     @else
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
                                     @endif
+                                    </div>
                                 </a>
                                 @endif
                             @endforeach
@@ -65,5 +68,9 @@
         @endif
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 

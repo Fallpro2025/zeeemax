@@ -8,14 +8,14 @@
     <title>@yield('title', 'ZEEEMAX - Brand Empowerment')</title>
     
     <!-- Preload ressources critiques -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" as="style">
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     
-    <!-- Fonts optimisées -->
+    <!-- Fonts optimisées - Inter + Poppins (style moderne comme CodAfrik) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
     
     <!-- Tailwind CSS CDN optimisé -->
     <script>
@@ -24,8 +24,10 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        raleway: ['Raleway', 'sans-serif'],
-                        sans: ['Raleway', 'sans-serif'],
+                        sans: ['Inter', 'Poppins', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
                     },
                     colors: {
                         primary: '#8B5CF6',
@@ -75,7 +77,7 @@
         $siteName = $siteSettings->nom_site ?? 'ZEEEMAX';
         $siteDescription = $siteSettings->description_site ?? 'ZEEEMAX accompagne les entrepreneurs à révéler leur identité de marque avec un branding sur-mesure et une stratégie digitale impactante.';
         $currentUrl = url()->current();
-        $defaultOgImage = $siteSettings->logo_url ?? asset('images/logo-footer.png');
+        $defaultOgImage = $siteSettings->logo_url ?? asset('images/logo-footer.PNG');
         if (!str_starts_with($defaultOgImage, 'http')) {
             $defaultOgImage = url($defaultOgImage);
         }
@@ -143,7 +145,7 @@
             '@type' => 'Organization',
             'name' => $siteName,
             'url' => url('/'),
-            'logo' => url($siteSettings->logo_url ?? 'images/logo-footer.png'),
+            'logo' => url($siteSettings->logo_url ?? 'images/logo-footer.PNG'),
             'description' => $siteDescription
         ];
         
@@ -207,6 +209,121 @@
         }
     </style>
     @stack('styles')
+    
+    <!-- Styles CSS pour les dégradés de titres (disponibles sur toutes les pages) -->
+    <style>
+    /* Titres avec dégradés modernes style CodAfrik */
+    .title-gradient-glass {
+        background: linear-gradient(135deg, #667EEA 0%, #764BA2 25%, #F093FB 50%, #F5576C 75%, #4FACFE 100%);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        animation: gradient-shift 10s ease infinite;
+    }
+    
+    .title-gradient-glass-sm {
+        background: linear-gradient(135deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+        background-size: 250% 250%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        animation: gradient-shift 8s ease infinite;
+    }
+    
+    .title-gradient-glass-white {
+        background: linear-gradient(135deg, #FFFFFF 0%, #E0E7FF 25%, #C7D2FE 50%, #A5B4FC 75%, #FFFFFF 100%);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        animation: gradient-shift 10s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* Support pour les navigateurs sans background-clip */
+    @supports not (-webkit-background-clip: text) {
+        .title-gradient-glass,
+        .title-gradient-glass-sm,
+        .title-gradient-glass-white {
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: #1F2937;
+        }
+        
+        .title-gradient-glass-white {
+            color: #FFFFFF;
+        }
+    }
+    
+    /* Icônes 3D avec dégradés mauve-bleu */
+    .icon-3d-gradient {
+        background: linear-gradient(135deg, #9e10ab 0%, #8B5CF6 50%, #6366F1 100%);
+        box-shadow: 
+            0 10px 25px rgba(158, 16, 171, 0.4),
+            0 5px 10px rgba(139, 92, 246, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        transform-style: preserve-3d;
+        position: relative;
+    }
+    
+    .icon-3d-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+    
+    .icon-3d-gradient:hover {
+        box-shadow: 
+            0 15px 35px rgba(158, 16, 171, 0.5),
+            0 8px 15px rgba(139, 92, 246, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            inset 0 -2px 15px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px) scale(1.1);
+    }
+    
+    .icon-svg-wrapper {
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    
+    .icon-svg-wrapper svg {
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+    }
+    
+    .icon-3d-gradient:hover .icon-svg-wrapper svg {
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+    }
+    </style>
 </head>
 <body class="font-sans bg-white text-gray-900 antialiased">
     <!-- Navigation moderne optimisée -->
@@ -304,7 +421,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <!-- Logo footer et description -->
                 <div class="md:col-span-2">
-                    <img src="{{ asset('images/logo-footer.png') }}"
+                    <img src="{{ asset('images/logo-footer.PNG') }}"
                          alt="Logo footer"
                          class="h-24 md:h-28 lg:h-32 w-auto max-w-none object-contain mb-6 bg-transparent"
                          onerror="this.style.display='none'">

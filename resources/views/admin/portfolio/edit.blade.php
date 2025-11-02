@@ -95,12 +95,13 @@
                             name="categorie" 
                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                             required>
-                        <option value="web" {{ old('categorie', $portfolio->categorie) == 'web' ? 'selected' : '' }}>Développement Web</option>
-                        <option value="mobile" {{ old('categorie', $portfolio->categorie) == 'mobile' ? 'selected' : '' }}>Application Mobile</option>
-                        <option value="design" {{ old('categorie', $portfolio->categorie) == 'design' ? 'selected' : '' }}>Design & Branding</option>
-                        <option value="marketing" {{ old('categorie', $portfolio->categorie) == 'marketing' ? 'selected' : '' }}>Marketing Digital</option>
-                        <option value="ecommerce" {{ old('categorie', $portfolio->categorie) == 'ecommerce' ? 'selected' : '' }}>E-commerce</option>
-                        <option value="autre" {{ old('categorie', $portfolio->categorie) == 'autre' ? 'selected' : '' }}>Autre</option>
+                        <option value="">Choisir une catégorie</option>
+                        <option value="Identité visuelle" {{ old('categorie', $portfolio->categorie) == 'Identité visuelle' ? 'selected' : '' }}>Identité visuelle</option>
+                        <option value="Communication" {{ old('categorie', $portfolio->categorie) == 'Communication' ? 'selected' : '' }}>Communication</option>
+                        <option value="Site Internet" {{ old('categorie', $portfolio->categorie) == 'Site Internet' ? 'selected' : '' }}>Site Internet</option>
+                        <option value="Application" {{ old('categorie', $portfolio->categorie) == 'Application' ? 'selected' : '' }}>Application</option>
+                        <option value="Photographie" {{ old('categorie', $portfolio->categorie) == 'Photographie' ? 'selected' : '' }}>Photographie</option>
+                        <option value="Événement" {{ old('categorie', $portfolio->categorie) == 'Événement' ? 'selected' : '' }}>Événement</option>
                     </select>
                     @error('categorie')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -5,14 +5,14 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
+<section class="relative py-56 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-20">
         <div class="absolute inset-0" style="background-image: url('{{ asset('images/hero-bg.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center">
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight animate-fade-in-up">
-                Lançons ensemble<br class="hidden sm:block"> votre activité
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight title-gradient-glass" style="opacity: 0.95;">
+                Lançons ensemble votre activité
             </h1>
             <p class="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
                 Nous serons à vos côtés à chaque étape pour révéler votre identité de marque
@@ -22,12 +22,13 @@
 </section>
 
 <!-- Contact Section -->
-<section class="py-20 bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-20 bg-gray-900 text-white overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <!-- Formulaire de contact -->
             <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20">
-                <h3 class="text-2xl font-bold mb-6">Prendre contact</h3>
+                <h3 class="text-2xl font-bold mb-6 text-white title-gradient-glass-white">Prendre contact</h3>
                 @if(session('success'))
                     <div class="mb-6 bg-green-500 text-white px-4 py-3 rounded-xl">
                         {{ session('success') }}
@@ -85,14 +86,16 @@
             <!-- Informations de contact -->
             <div class="space-y-8">
                 <div class="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md p-6 rounded-2xl border border-gray-700/50">
-                    <h3 class="text-2xl font-bold mb-6 text-white">Contactez-nous</h3>
+                    <h3 class="text-2xl font-bold mb-6 text-white title-gradient-glass-white">Contactez-nous</h3>
                     <div class="space-y-4">
                         @if(!empty($settings?->email))
                         <div class="flex items-center space-x-4 group">
-                            <div class="w-12 h-12 bg-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div class="icon-3d-gradient w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <div class="icon-svg-wrapper">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
+                                </div>
                             </div>
                             <div>
                                 <p class="font-semibold text-white">Email</p>
@@ -103,10 +106,12 @@
                         
                         @if(!empty($settings?->telephone))
                         <div class="flex items-center space-x-4 group">
-                            <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div class="icon-3d-gradient w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <div class="icon-svg-wrapper">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                 </svg>
+                                </div>
                             </div>
                             <div>
                                 <p class="font-semibold text-white">Téléphone</p>
@@ -118,11 +123,13 @@
                         @php($adresseComplete = collect([$settings?->adresse, $settings?->code_postal, $settings?->ville, $settings?->pays])->filter()->implode(', '))
                         @if(!empty($adresseComplete))
                         <div class="flex items-center space-x-4 group">
-                            <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div class="icon-3d-gradient w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <div class="icon-svg-wrapper">
                                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
+                                </div>
                             </div>
                             <div>
                                 <p class="font-semibold text-white">Localisation</p>
@@ -143,5 +150,9 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 

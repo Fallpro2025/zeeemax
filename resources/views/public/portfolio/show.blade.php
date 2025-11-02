@@ -5,7 +5,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
+<section class="relative py-56 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-20">
         @if($item->image_url)
             <div class="absolute inset-0" style="background-image: url('{{ str_starts_with($item->image_url, 'http') ? $item->image_url : asset($item->image_url) }}'); background-size: cover; background-position: center;"></div>
@@ -13,13 +13,14 @@
     </div>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         <span class="text-purple-300 font-bold uppercase tracking-widest text-sm mb-4 block">{{ $item->categorie }}</span>
-        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">{{ $item->titre }}</h1>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight title-gradient-glass" style="opacity: 0.95;">{{ $item->titre }}</h1>
     </div>
 </section>
 
 <!-- Project Details -->
-<section class="py-24 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-white overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div class="mb-12">
             @if($item->image_url)
             <img src="{{ str_starts_with($item->image_url, 'http') ? $item->image_url : asset($item->image_url) }}" 
@@ -28,13 +29,13 @@
             @endif
             
             <div class="prose prose-lg max-w-none mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">À propos du projet</h2>
+                <h2 class="text-3xl font-bold mb-4 tracking-tight title-gradient-glass-sm">À propos du projet</h2>
                 <p class="text-gray-700 leading-relaxed text-lg">{{ $item->description }}</p>
             </div>
             
             @if($item->technologies && count($item->technologies) > 0)
             <div class="mb-8">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Technologies utilisées</h3>
+                <h3 class="text-xl font-bold mb-4 tracking-tight title-gradient-glass-sm">Technologies utilisées</h3>
                 <div class="flex flex-wrap gap-3">
                     @foreach($item->technologies as $tech)
                     <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full font-semibold">{{ $tech }}</span>
@@ -70,5 +71,9 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 

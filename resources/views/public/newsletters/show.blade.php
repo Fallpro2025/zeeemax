@@ -4,8 +4,9 @@
 @section('description', $article->extrait ?? Str::limit(strip_tags($article->contenu), 150))
 
 @section('content')
-<section class="py-16 bg-white">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-16 bg-white overflow-hidden">
+    @include('partials.anime-background')
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <h1 class="text-4xl font-bold mb-6">{{ $article->titre }}</h1>
         @if(!empty($article->categorie))
             <div class="mb-4">
@@ -20,6 +21,10 @@
         </article>
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 
 

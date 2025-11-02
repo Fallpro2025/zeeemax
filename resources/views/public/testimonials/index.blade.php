@@ -5,15 +5,15 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative py-32 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
+<section class="relative py-56 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white overflow-hidden">
     <div class="absolute inset-0 opacity-20">
         <div class="absolute inset-0" style="background-image: url('{{ asset('images/testimonials-bg.jpg') }}'); background-size: cover; background-position: center;"></div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center">
             <p class="text-purple-300 font-bold uppercase tracking-widest text-sm mb-4 animate-fade-in-up">Témoignages</p>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight animate-fade-in-up animation-delay-200">
-                Ils sont satisfaits<br class="hidden sm:block"> de nos services !
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight title-gradient-glass" style="opacity: 0.95;">
+                Ils sont satisfaits de nos services !
             </h1>
             <p class="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400">
                 Découvrez ce que nos clients disent de notre expertise
@@ -25,6 +25,7 @@
 <!-- Testimonials Grid -->
 <section class="relative py-24 text-white overflow-hidden bg-cover bg-center bg-fixed" style="background-image: url('{{ asset('images/testimonials-bg.jpg') }}');">
     <div class="absolute inset-0 bg-black opacity-60"></div>
+    @include('partials.anime-background')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         @if($testimonials->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -80,7 +81,7 @@
 <!-- CTA Section -->
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+        <h2 class="text-4xl md:text-5xl font-black mb-6 tracking-tight title-gradient-glass">
             Rejoignez nos clients satisfaits
         </h2>
         <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -91,5 +92,9 @@
         </a>
     </div>
 </section>
+
+@push('scripts')
+@include('partials.anime-scripts')
+@endpush
 @endsection
 

@@ -10,7 +10,15 @@ class PublicPortfolioController extends Controller
     public function index()
     {
         $portfolioItems = PortfolioItem::actif()->ordre()->get();
-        $categories = PortfolioItem::actif()->distinct()->pluck('categorie')->filter()->sort()->values();
+        // Catégories statiques pour les réalisations
+        $categories = collect([
+            'Identité visuelle',
+            'Communication',
+            'Site Internet',
+            'Application',
+            'Photographie',
+            'Événement'
+        ]);
         return view('public.portfolio.index', compact('portfolioItems', 'categories'));
     }
 

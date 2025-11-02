@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\ValeurController;
 use App\Http\Controllers\Admin\RapportController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\PublicServiceController;
 use App\Http\Controllers\PublicPortfolioController;
 use App\Http\Controllers\PublicAproposController;
@@ -101,6 +102,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Gestion des Valeurs
     Route::resource('valeurs', ValeurController::class);
     Route::post('valeurs/{valeur}/toggle', [ValeurController::class, 'toggle'])->name('valeurs.toggle');
+    
+    // Gestion des Clients
+    Route::resource('clients', ClientController::class);
+    Route::post('clients/{client}/toggle', [ClientController::class, 'toggle'])->name('clients.toggle');
     
     // Paramétrage du site
     Route::get('site-settings', [SiteSettingController::class, 'index'])->name('site-settings.index');
